@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Màu nền chính -->
+    <color name="colorPrimary">#1E88E5</color>          <!-- xanh dương -->
+    <color name="colorPrimaryDark">#1565C0</color>      <!-- xanh đậm hơn -->
+    <color name="colorAccent">#FFC107</color>           <!-- vàng nổi bật -->
+
+    <!-- Màu nền, văn bản -->
+    <color name="colorBackground">#FFFFFF</color>       <!-- trắng -->
+    <color name="colorTextPrimary">#212121</color>      <!-- đen xám -->
+    <color name="colorTextSecondary">#757575</color>    <!-- xám -->
+
+    <!-- Màu cảnh báo, lỗi -->
+    <color name="colorError">#D32F2F</color>             <!-- đỏ -->
+
+    <!-- Màu placeholder hình ảnh -->
+    <color name="colorPlaceholder">#E0E0E0</color>       <!-- xám nhạt -->
+</resources>

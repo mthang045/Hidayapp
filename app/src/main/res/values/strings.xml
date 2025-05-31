@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hiday Movie</string>
+
+    <!-- MainActivity -->
+    <string name="search_hint">Tìm phim...</string>
+    <string name="no_new_movies">Không có phim mới</string>
+    <string name="loading_error">Lỗi tải phim</string>
+    <string name="network_error">Lỗi mạng</string>
+
+    <!-- DetailActivity -->
+    <string name="status">Trạng thái:</string>
+    <string name="current_episode">Tập hiện tại:</string>
+    <string name="description_hint">Mô tả phim...</string>
+    <string name="no_movie_data">Không lấy được dữ liệu phim</string>
+
+    <!-- Auth -->
+    <string name="email_invalid">Email không hợp lệ</string>
+    <string name="password_invalid">Mật khẩu phải từ 6 ký tự trở lên</string>
+    <string name="confirm_password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="display_name_invalid">Tên hiển thị phải ít nhất 3 ký tự</string>
+    <string name="login_success">Đăng nhập thành công</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="register_success">Đăng ký thành công</string>
+    <string name="register_failed">Đăng ký thất bại</string>
+    <string name="logout">Đăng xuất</string>
+
+    <!-- Profile -->
+    <string name="profile">Hồ sơ</string>
+    <string name="user_name">Tên người dùng</string>
+    <string name="user_email">Email</string>
+
+    <!-- Settings -->
+    <string name="notifications">Thông báo</string>
+    <string name="notifications_on">Thông báo bật</string>
+    <string name="notifications_off">Thông báo tắt</string>
+
+    <!-- Buttons -->
+    <string name="btn_login">Đăng nhập</string>
+    <string name="btn_register">Đăng ký</string>
+
+    <!-- General -->
+    <string name="ok">OK</string>
+    <string name="cancel">Hủy</string>
+</resources>

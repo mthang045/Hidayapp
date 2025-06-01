@@ -5,34 +5,32 @@ import java.util.List;
 
 public class Movie {
 
-    @SerializedName("title")
-    private String title;           // Tên phim
+    @SerializedName("name")
+    private String title;
 
     @SerializedName("slug")
-    private String slug;            // Đường dẫn slug phim dùng để lấy chi tiết
+    private String slug;
 
-    @SerializedName("thumb")        // Ảnh đại diện (thumbnail)
+    @SerializedName("thumb_url")
     private String thumb;
 
-    @SerializedName("description")  // Mô tả ngắn
+    @SerializedName("description")
     private String description;
 
-    @SerializedName("status")       // Trạng thái phim (đang chiếu, hoàn thành,...)
+    @SerializedName("status")
     private String status;
 
-    @SerializedName("episode_current")   // Tập hiện tại (nếu có)
+    @SerializedName("episode_current")
     private String episodeCurrent;
 
-    @SerializedName("episode_total")     // Tổng số tập (nếu có)
-    private int episodeTotal;
+    @SerializedName("episode_total")
+    private Integer episodeTotal;
 
-    @SerializedName("categories")        // Thể loại phim (danh sách)
-    private List<String> categories;
-
-    // Các getter và setter
+    @SerializedName("categories")
+    private List<String> categories;  // Thêm thuộc tính categories
 
     public Movie(String title, String slug, String thumb, String description, String status,
-                 String episodeCurrent, int episodeTotal, List<String> categories) {
+                 String episodeCurrent, Integer episodeTotal, List<String> categories) {
         this.title = title;
         this.slug = slug;
         this.thumb = thumb;
@@ -43,37 +41,17 @@ public class Movie {
         this.categories = categories;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public String getThumb() {
-        return thumb;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getEpisodeCurrent() {
-        return episodeCurrent;
-    }
-
-    public int getEpisodeTotal() {
-        return episodeTotal;
-    }
-
+    // Getter cho categories
     public List<String> getCategories() {
         return categories;
     }
 
-    // Bạn có thể thêm setter nếu cần thay đổi dữ liệu sau này
+    // Các getter còn lại giữ nguyên
+    public String getTitle() { return title; }
+    public String getSlug() { return slug; }
+    public String getThumb() { return thumb; }
+    public String getDescription() { return description; }
+    public String getStatus() { return status; }
+    public String getEpisodeCurrent() { return episodeCurrent; }
+    public Integer getEpisodeTotal() { return episodeTotal; }
 }

@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     private List<Movie> movieList = new ArrayList<>();
 
     private ApiService apiService;
-    private int currentPage = 1;  // Trang hiện tại, có thể nâng cấp pagination
+    private int currentPage = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,21 +68,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
                 progressBar.setVisibility(ProgressBar.GONE);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    Map<String, Object> data = response.body();
+                    Map<String, Object> root = response.body();
 
-                    // Lấy danh sách phim trong key "data" hoặc theo cấu trúc API thực tế
-                    List<Map<String, Object>> moviesData = (List<Map<String, Object>>) data.get("data");
-                    if (moviesData != null) {
-                        for (Map<String, Object> item : moviesData) {
-                            String title = (String) item.get("title");
+                    // Lấy danh sách phim từ key "items"
+                    List<Map<String, Object>> items = (List<Map<String, Object>>) root.get("items");
+                    if (items != null && !items.isEmpty()) {
+                        movieList.clear(); // Xóa danh sách cũ nếu có
+
+                        // Lấy đường dẫn gốc ảnh
+                        String pathImage = (String) root.get("pathImage");
+                        if (pathImage == null) pathImage = "";
+
+                        for (Map<String, Object> item : items) {
+                            String title = (String) item.get("name");
                             String slug = (String) item.get("slug");
-                            String thumb = (String) item.get("thumb");
-                            String description = (String) item.get("description");
-                            String status = (String) item.get("status");
-                            String episodeCurrent = (String) item.get("episode_current");
-                            int episodeTotal = item.get("episode_total") instanceof Number ?
-                                    ((Number) item.get("episode_total")).intValue() : 0;
-                            List<String> categories = (List<String>) item.get("categories");
+                            String thumbUrl = (String) item.get("thumb_url");
+                            String description = (String) item.getOrDefault("origin_name", "");
+                            String status = ""; // API không có status rõ, để trống hoặc xử lý khác
+                            String episodeCurrent = ""; // Không có trường này trong JSON mẫu
+                            int episodeTotal = 0; // Không có trường này trong JSON mẫu
+                            List<String> categories = new ArrayList<>(); // Không có categories trong JSON mẫu
+
+                            String thumb = pathImage + thumbUrl;
 
                             Movie movie = new Movie(title, slug, thumb, description, status,
                                     episodeCurrent, episodeTotal, categories);
@@ -105,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         });
     }
 
-    // Bắt sự kiện click phim, mở DetailActivity
     @Override
     public void onMovieClick(Movie movie) {
         Intent intent = new Intent(this, DetailActivity.class);
@@ -113,12 +119,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         startActivity(intent);
     }
 
-    // Xử lý menu: tìm kiếm, profile, đăng xuất
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        // Thiết lập SearchView
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         if (searchView != null) {
@@ -126,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    // TODO: Thực hiện gọi API tìm kiếm hoặc lọc danh sách phim
                     Toast.makeText(MainActivity.this, "Tìm kiếm: " + query, Toast.LENGTH_SHORT).show();
                     searchView.clearFocus();
                     return true;
@@ -134,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    // Có thể thực hiện lọc danh sách theo text nhập từng ký tự nếu muốn
                     return false;
                 }
             });
@@ -148,12 +150,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         int id = item.getItemId();
 
         if (id == R.id.action_profile) {
-            // Mở màn hình Profile
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_logout) {
-            // Đăng xuất Firebase và chuyển về Login
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -43,6 +43,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        // Ánh xạ view
         imgThumbnail = findViewById(R.id.imgThumbnail);
         tvTitle = findViewById(R.id.tvTitle);
         tvDescription = findViewById(R.id.tvDescription);
@@ -51,13 +52,15 @@ public class DetailActivity extends AppCompatActivity {
         recyclerEpisodes = findViewById(R.id.recyclerEpisodes);
         progressBar = findViewById(R.id.progressBar);
 
+        // Setup RecyclerView
         recyclerEpisodes.setLayoutManager(new LinearLayoutManager(this));
         episodeAdapter = new EpisodeAdapter(episodeList);
         recyclerEpisodes.setAdapter(episodeAdapter);
 
+        // Khởi tạo API service
         apiService = ApiClient.getApiService();
 
-        // Lấy slug truyền từ intent
+        // Lấy slug phim truyền từ Intent
         String slug = getIntent().getStringExtra("slug");
         if (slug == null || slug.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy thông tin phim", Toast.LENGTH_SHORT).show();
@@ -65,6 +68,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
+        // Gọi API lấy chi tiết phim
         fetchMovieDetail(slug);
     }
 
@@ -79,21 +83,21 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Map<String, Object> data = response.body();
 
-                    // Phân tích JSON theo cấu trúc thực tế API ophim1.com
-                    // Giả sử data chứa key "movie" là thông tin phim
+                    // Lấy thông tin phim từ key "movie"
                     Map<String, Object> movie = (Map<String, Object>) data.get("movie");
                     if (movie == null) {
                         Toast.makeText(DetailActivity.this, "Không lấy được dữ liệu phim", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
+                    // Lấy các trường dữ liệu cần thiết
                     String title = (String) movie.get("title");
                     String description = (String) movie.get("description");
                     String status = (String) movie.get("status");
                     String thumb = (String) movie.get("thumb");
                     String episodeCurrent = (String) movie.get("episode_current");
 
-                    // Hiển thị thông tin phim
+                    // Hiển thị lên UI
                     tvTitle.setText(title);
                     tvDescription.setText(description);
                     tvStatus.setText("Trạng thái: " + status);
@@ -101,23 +105,23 @@ public class DetailActivity extends AppCompatActivity {
 
                     Glide.with(DetailActivity.this)
                             .load(thumb)
-                            .placeholder(R.drawable.ic_placeholder)
+                            .placeholder(R.drawable.ic_placeholder) // bạn cần có drawable này
                             .into(imgThumbnail);
 
-                    // Lấy danh sách tập phim (giả sử key "episodes" chứa list tập)
+                    // Lấy danh sách tập phim (giả sử key "episodes" là List)
                     List<Map<String, Object>> episodes = (List<Map<String, Object>>) movie.get("episodes");
                     if (episodes != null) {
                         episodeList.clear();
                         for (Map<String, Object> ep : episodes) {
                             String epTitle = (String) ep.get("title");
                             String epSlug = (String) ep.get("slug");
-                            // Lấy URL video từ server_data hoặc trường tương ứng
+
                             String videoUrl = "";
                             Object serverData = ep.get("server_data");
                             if (serverData instanceof String) {
                                 videoUrl = (String) serverData;
                             }
-                            // Nếu server_data phức tạp, cần parse thêm
+                            // Nếu server_data phức tạp hơn bạn cần parse thêm
 
                             int epNumber = ep.get("episode_number") instanceof Number ?
                                     ((Number) ep.get("episode_number")).intValue() : 0;

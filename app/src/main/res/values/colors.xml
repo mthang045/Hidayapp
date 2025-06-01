@@ -10,6 +10,10 @@
     <color name="colorTextPrimary">#212121</color>      <!-- đen xám -->
     <color name="colorTextSecondary">#757575</color>    <!-- xám -->
 
+    <!-- Thêm màu black và white để fix lỗi -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
     <!-- Màu cảnh báo, lỗi -->
     <color name="colorError">#D32F2F</color>             <!-- đỏ -->
 

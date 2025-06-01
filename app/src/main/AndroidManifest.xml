@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.hidaymovie">
+    package="com.hidaymovie">
+
+    <!-- Quyền truy cập Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".HidayMovieApplication"
@@ -15,34 +18,37 @@
         android:theme="@style/Theme.HidayMovie"
         tools:targetApi="31">
 
-        <!-- Màn hình chính -->
+        <!-- Màn hình chính - Launcher -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Màn hình đăng nhập -->
-        <activity android:name=".ui.auth.LoginActivity"
+        <activity
+            android:name=".ui.auth.LoginActivity"
             android:exported="false" />
 
         <!-- Màn hình đăng ký -->
-        <activity android:name=".ui.auth.RegisterActivity"
+        <activity
+            android:name=".ui.auth.RegisterActivity"
             android:exported="false" />
 
         <!-- Màn hình chi tiết phim -->
-        <activity android:name=".ui.detail.DetailActivity"
+        <activity
+            android:name=".ui.detail.DetailActivity"
             android:exported="false" />
 
         <!-- Màn hình hồ sơ người dùng -->
-        <activity android:name=".ui.profile.ProfileActivity"
+        <activity
+            android:name=".ui.profile.ProfileActivity"
             android:exported="false" />
 
-        <!-- Nếu có thêm activity khác thì khai báo ở đây -->
+        <!-- Thêm activity khác nếu có -->
 
     </application>
 

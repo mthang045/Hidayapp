@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.main;
+package com.example.hidaymovie.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hidaymovie.R;
-import com.hidaymovie.model.Movie;
-import com.hidaymovie.network.ApiClient;
-import com.hidaymovie.network.ApiService;
-import com.hidaymovie.ui.auth.LoginActivity;
-import com.hidaymovie.ui.detail.DetailActivity;
-import com.hidaymovie.ui.profile.ProfileActivity;
+import com.example.hidaymovie.model.Movie;
+import com.example.hidaymovie.network.ApiClient;
+import com.example.hidaymovie.network.ApiService;
+import com.example.hidaymovie.ui.auth.LoginActivity;
+import com.example.hidaymovie.ui.detail.DetailActivity;
+import com.example.hidaymovie.ui.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;

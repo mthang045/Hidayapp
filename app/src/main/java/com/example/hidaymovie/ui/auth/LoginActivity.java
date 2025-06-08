@@ -1,84 +1,111 @@
-package com.hidaymovie.ui.auth;
+package com.example.hidaymovie.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hidaymovie.ui.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hidaymovie.R;
-import com.hidaymovie.ui.main.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText edtEmail, edtPassword;
-    private Button btnLogin;
-    private ProgressBar progressBar;
-
     private FirebaseAuth mAuth;
+    private EditText edtEmail, edtPassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(com.hidaymovie.R.layout.activity_login);
 
         // Khởi tạo FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        // Ánh xạ view
-        edtEmail = findViewById(R.id.edtEmail);
+        // Khai báo các view
+        edtEmail = findViewById(R.id.edtUsername);  // Đảm bảo id đúng
         edtPassword = findViewById(R.id.edtPassword);
-        btnLogin = findViewById(R.id.btnLogin);
-        progressBar = findViewById(R.id.progressBar);
+       Button btnSignIn = findViewById(R.id.btnSignIn);
+        TextView tvRegister = findViewById(R.id.tvRegister);
 
-        btnLogin.setOnClickListener(v -> attemptLogin());
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            // Nếu đã đăng nhập, chuyển đến MainActivity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        // Xử lý sự kiện đăng nhập
+        btnSignIn.setOnClickListener(v -> {
+            String email = edtEmail.getText().toString();
+            String password = edtPassword.getText().toString();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            loginUser(email, password);
+        });
+
+        // Chuyển đến màn hình đăng ký
+        tvRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
     }
 
-    private void attemptLogin() {
-        String email = edtEmail.getText().toString().trim();
-        String password = edtPassword.getText().toString();
-
-        // Kiểm tra dữ liệu đầu vào
-        if (!AuthUtils.isValidEmail(email)) {
-            edtEmail.setError("Email không hợp lệ");
-            edtEmail.requestFocus();
-            return;
-        }
-
-        if (!AuthUtils.isValidPassword(password)) {
-            edtPassword.setError("Mật khẩu phải từ 6 ký tự trở lên");
-            edtPassword.requestFocus();
-            return;
-        }
-
-        progressBar.setVisibility(View.VISIBLE);
-        btnLogin.setEnabled(false);
-
-        // Đăng nhập Firebase
+    private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    progressBar.setVisibility(View.GONE);
-                    btnLogin.setEnabled(true);
                     if (task.isSuccessful()) {
                         // Đăng nhập thành công
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                        // Chuyển đến MainActivity
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        getUserData(user);  // Lấy dữ liệu người dùng từ Firestore
                     } else {
                         // Đăng nhập thất bại
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(),
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void getUserData(FirebaseUser user) {
+        if (user != null) {
+            // Lấy dữ liệu người dùng từ Firestore
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users") // Giả sử bạn lưu thông tin người dùng trong collection "users"
+                    .document(user.getUid()) // Lấy thông tin người dùng dựa trên UID của Firebase
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Lấy dữ liệu người dùng từ Firestore
+                            if (task.getResult() != null) {
+                                String username = task.getResult().getString("username");
+                                String email = task.getResult().getString("email");
+
+                                // Xử lý dữ liệu người dùng (ví dụ: hiển thị thông tin người dùng)
+                                Log.d("UserData", "Username: " + username + ", Email: " + email);
+
+                                // Chuyển đến MainActivity sau khi lấy dữ liệu người dùng
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        } else {
+                            // Lỗi khi lấy dữ liệu
+                            Log.w("LoginActivity", "Error getting user data", task.getException());
+                        }
+                    });
+        }
     }
 }

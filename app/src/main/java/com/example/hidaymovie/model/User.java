@@ -1,4 +1,4 @@
-package com.hidaymovie.model;
+package com.example.hidaymovie.model;
 
 public class User {
 

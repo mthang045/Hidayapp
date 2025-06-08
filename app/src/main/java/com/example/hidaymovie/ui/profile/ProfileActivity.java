@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.profile;
+package com.example.hidaymovie.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hidaymovie.R;
-import com.hidaymovie.ui.auth.LoginActivity;
+import com.example.hidaymovie.ui.auth.LoginActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.hidaymovie.utils;
+package com.example.hidaymovie.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

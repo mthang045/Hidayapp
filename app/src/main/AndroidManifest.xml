@@ -1,13 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.hidaymovie">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Quyền truy cập Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".HidayMovieApplication"
+        android:name="com.example.hidaymovie.HidayMovieApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,9 +15,9 @@
         android:theme="@style/Theme.HidayMovie"
         tools:targetApi="31">
 
-        <!-- Màn hình chính - Launcher -->
+        <!-- Màn hình đăng nhập là màn hình chính -->
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="com.example.hidaymovie.ui.auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,27 +25,22 @@
             </intent-filter>
         </activity>
 
-        <!-- Màn hình đăng nhập -->
+        <!-- Các màn hình khác -->
         <activity
-            android:name=".ui.auth.LoginActivity"
+            android:name="com.example.hidaymovie.ui.main.MainActivity"
             android:exported="false" />
 
-        <!-- Màn hình đăng ký -->
         <activity
-            android:name=".ui.auth.RegisterActivity"
+            android:name="com.example.hidaymovie.ui.auth.RegisterActivity"
             android:exported="false" />
 
-        <!-- Màn hình chi tiết phim -->
         <activity
-            android:name=".ui.detail.DetailActivity"
+            android:name="com.example.hidaymovie.ui.profile.ProfileActivity"
             android:exported="false" />
 
-        <!-- Màn hình hồ sơ người dùng -->
         <activity
-            android:name=".ui.profile.ProfileActivity"
+            android:name="com.example.hidaymovie.ui.detail.DetailActivity"
             android:exported="false" />
-
-        <!-- Thêm activity khác nếu có -->
 
     </application>
 

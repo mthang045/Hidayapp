@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.main;
+package com.example.hidaymovie.ui.main;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hidaymovie.R;
-import com.hidaymovie.model.Movie;
+import com.example.hidaymovie.model.Movie;
 
 import java.util.List;
 

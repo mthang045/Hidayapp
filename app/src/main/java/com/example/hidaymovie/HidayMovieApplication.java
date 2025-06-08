@@ -1,9 +1,9 @@
-package com.hidaymovie;
+package com.example.hidaymovie;
 
 import android.app.Application;
 
 import com.google.firebase.FirebaseApp;
-import com.hidaymovie.network.ApiClient;
+import com.example.hidaymovie.network.ApiClient;
 
 public class HidayMovieApplication extends Application {
 

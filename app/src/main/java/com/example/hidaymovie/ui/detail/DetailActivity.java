@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.detail;
+package com.example.hidaymovie.ui.detail;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hidaymovie.R;
-import com.hidaymovie.model.Episode;
-import com.hidaymovie.network.ApiClient;
-import com.hidaymovie.network.ApiService;
+import com.example.hidaymovie.model.Episode;
+import com.example.hidaymovie.network.ApiClient;
+import com.example.hidaymovie.network.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView recyclerEpisodes;
     private ProgressBar progressBar;
 
-    private EpisodeAdapter episodeAdapter;
+    private com.example.hidaymovie.ui.detail.EpisodeAdapter episodeAdapter;
     private List<Episode> episodeList = new ArrayList<>();
 
     private ApiService apiService;

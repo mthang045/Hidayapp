@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.detail;
+package com.example.hidaymovie.ui.detail;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hidaymovie.R;
-import com.hidaymovie.model.Episode;
+import com.example.hidaymovie.model.Episode;
 
 import java.util.List;
 

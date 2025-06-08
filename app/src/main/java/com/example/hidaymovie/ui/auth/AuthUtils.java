@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.auth;
+package com.example.hidaymovie.ui.auth;
 
 import android.text.TextUtils;
 import android.util.Patterns;

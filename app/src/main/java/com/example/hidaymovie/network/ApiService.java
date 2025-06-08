@@ -1,4 +1,4 @@
-package com.hidaymovie.network;
+package com.example.hidaymovie.network;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

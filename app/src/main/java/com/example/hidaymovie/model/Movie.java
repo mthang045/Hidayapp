@@ -1,4 +1,4 @@
-package com.hidaymovie.model;
+package com.example.hidaymovie.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;

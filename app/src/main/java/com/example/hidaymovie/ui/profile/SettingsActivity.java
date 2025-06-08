@@ -1,4 +1,4 @@
-package com.hidaymovie.ui.profile;
+package com.example.hidaymovie.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.hidaymovie.R;
-import com.hidaymovie.ui.auth.LoginActivity;
+import com.example.hidaymovie.ui.auth.LoginActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 

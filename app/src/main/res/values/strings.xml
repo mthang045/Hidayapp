@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hiday Movie</string>
+
 
     <!-- MainActivity -->
     <string name="search_hint">Tìm phim...</string>
@@ -42,4 +42,29 @@
     <!-- General -->
     <string name="ok">OK</string>
     <string name="cancel">Hủy</string>
-</resources>
+
+
+
+        <string name="app_name">HidayMovie</string>
+        <string name="username_hint">Username</string>
+        <string name="password_hint">Password</string>
+        <string name="sign_in_button">Sign In</string>
+        <string name="register_text">Bạn chưa có tài khoản? Đăng ký ngay </string>
+        <string name="logo_description">Logo HidayMovie</string>
+
+
+
+        <string name="google_login_text">Đăng nhập bằng Google</string>
+        <string name="facebook_login_text">Đăng nhập bằng Facebook</string>
+        <string name="google_login_description">Đăng nhập bằng tài khoản Google</string>
+        <string name="facebook_login_description">Đăng nhập bằng tài khoản Facebook</string>
+    </resources>
+
+
+
+
+
+
+
+
+

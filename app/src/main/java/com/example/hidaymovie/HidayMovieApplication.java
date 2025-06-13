@@ -1,22 +1,20 @@
 package com.example.hidaymovie;
 
-import android.app.Application;
 
-import com.google.firebase.FirebaseApp;
-import com.example.hidaymovie.network.ApiClient;
+import android.app.Application;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HidayMovieApplication extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // Khởi tạo Firebase (nếu chưa khởi tạo)
-        FirebaseApp.initializeApp(this);
+        // Khởi tạo FirebaseAuth và FirebaseFirestore chỉ một lần khi ứng dụng khởi động
+        FirebaseAuth.getInstance();
+        FirebaseFirestore.getInstance();
 
-        // Khởi tạo Retrofit client (lazily)
-        ApiClient.getClient();
-
-        // Bạn có thể thêm khởi tạo các thành phần khác ở đây nếu cần
+        // Bạn có thể khởi tạo bất kỳ dịch vụ hoặc cấu hình nào khác ở đây
+        // Ví dụ: Theo dõi người dùng, thiết lập các dịch vụ toàn cục, v.v.
     }
 }

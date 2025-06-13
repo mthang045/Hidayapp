@@ -26,22 +26,22 @@
         </activity>
 
         <!-- Các màn hình khác -->
-        <activity
-            android:name="com.example.hidaymovie.ui.main.MainActivity"
-            android:exported="false" />
 
         <activity
             android:name="com.example.hidaymovie.ui.auth.RegisterActivity"
             android:exported="false" />
 
-        <activity
-            android:name="com.example.hidaymovie.ui.profile.ProfileActivity"
-            android:exported="false" />
+
+
+        <activity android:name="com.example.hidaymovie.ui.auth.ForgotPasswordActivity"
+
+            android:label="Quên Mật Khẩu"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
 
         <activity
-            android:name="com.example.hidaymovie.ui.detail.DetailActivity"
+            android:name="com.example.hidaymovie.main.MainActivity"
             android:exported="false" />
-
     </application>
+
 
 </manifest>

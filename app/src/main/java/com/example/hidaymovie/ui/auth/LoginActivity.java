@@ -1,111 +1,128 @@
 package com.example.hidaymovie.ui.auth;
 
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hidaymovie.ui.main.MainActivity;
+import com.example.hidaymovie.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.hidaymovie.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private EditText edtEmail, edtPassword;
+    private EditText edtUsername, edtPassword;
+    private Button btnSignIn;
+    private TextView tvRegister, tvForgotPassword;
+    private ImageView imgShowPassword;
+    private CheckBox cbRememberMe;
+    private boolean isPasswordVisible = false;
 
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.hidaymovie.R.layout.activity_login);
+        setContentView(R.layout.activity_login);
 
-        // Khởi tạo FirebaseAuth
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        // Khai báo các view
-        edtEmail = findViewById(R.id.edtUsername);  // Đảm bảo id đúng
+        // Bind UI elements
+        edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
-       Button btnSignIn = findViewById(R.id.btnSignIn);
-        TextView tvRegister = findViewById(R.id.tvRegister);
+        btnSignIn = findViewById(R.id.btnSignIn);
+        imgShowPassword = findViewById(R.id.imgShowPassword);
+        tvRegister = findViewById(R.id.tvRegister);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
+        cbRememberMe = findViewById(R.id.cbRememberMe); // Bind CheckBox for Remember Me
 
-        // Kiểm tra xem người dùng đã đăng nhập chưa
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            // Nếu đã đăng nhập, chuyển đến MainActivity
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+        // Check if user credentials are saved in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        String savedEmail = sharedPreferences.getString("email", "");
+        String savedPassword = sharedPreferences.getString("password", "");
+
+        if (!savedEmail.isEmpty() && !savedPassword.isEmpty()) {
+            edtUsername.setText(savedEmail);
+            edtPassword.setText(savedPassword);
+            cbRememberMe.setChecked(true); // Automatically check Remember Me if credentials exist
         }
 
-        // Xử lý sự kiện đăng nhập
-        btnSignIn.setOnClickListener(v -> {
-            String email = edtEmail.getText().toString();
-            String password = edtPassword.getText().toString();
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                return;
+        // Toggle password visibility when user clicks on the eye icon
+        imgShowPassword.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                edtPassword.setInputType(129); // PASSWORD type (show password)
+                imgShowPassword.setImageResource(R.drawable.ic_eyes_off); // Show the eye icon
+            } else {
+                edtPassword.setInputType(128); // TEXT type (hide password)
+                imgShowPassword.setImageResource(R.drawable.ic_eyes_off); // Show the crossed eye icon
             }
-
-            loginUser(email, password);
+            isPasswordVisible = !isPasswordVisible;
         });
 
-        // Chuyển đến màn hình đăng ký
+        // Sign In button click listener
+        btnSignIn.setOnClickListener(v -> signInUser());
+
+        // Register click listener to navigate to Register Activity
         tvRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
+
+        // Forgot password click listener
+        tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
-    private void loginUser(String email, String password) {
+    private void signInUser() {
+        String email = edtUsername.getText().toString().trim();
+        String password = edtPassword.getText().toString().trim();
+
+        // Check if fields are empty
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Vui lòng điền đủ thông tin!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Sign in with Firebase Authentication
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Đăng nhập thành công
                         FirebaseUser user = mAuth.getCurrentUser();
-                        getUserData(user);  // Lấy dữ liệu người dùng từ Firestore
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+
+                        // If Remember Me is checked, save user credentials in SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        if (cbRememberMe.isChecked()) {
+                            editor.putString("email", email);
+                            editor.putString("password", password);
+                        } else {
+                            // Remove saved credentials if Remember Me is unchecked
+                            editor.remove("email");
+                            editor.remove("password");
+                        }
+                        editor.apply();
+
+                        // Navigate to the main screen after successful login
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish(); // Close LoginActivity to prevent going back
                     } else {
-                        // Đăng nhập thất bại
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại. Kiểm tra lại thông tin!", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void getUserData(FirebaseUser user) {
-        if (user != null) {
-            // Lấy dữ liệu người dùng từ Firestore
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("users") // Giả sử bạn lưu thông tin người dùng trong collection "users"
-                    .document(user.getUid()) // Lấy thông tin người dùng dựa trên UID của Firebase
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Lấy dữ liệu người dùng từ Firestore
-                            if (task.getResult() != null) {
-                                String username = task.getResult().getString("username");
-                                String email = task.getResult().getString("email");
-
-                                // Xử lý dữ liệu người dùng (ví dụ: hiển thị thông tin người dùng)
-                                Log.d("UserData", "Username: " + username + ", Email: " + email);
-
-                                // Chuyển đến MainActivity sau khi lấy dữ liệu người dùng
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        } else {
-                            // Lỗi khi lấy dữ liệu
-                            Log.w("LoginActivity", "Error getting user data", task.getException());
-                        }
-                    });
-        }
     }
 }

@@ -1,57 +1,42 @@
 package com.example.hidaymovie.model;
 
-import com.google.gson.annotations.SerializedName;
-import java.util.List;
-
 public class Movie {
 
-    @SerializedName("name")
     private String title;
+    private String posterPath;
+    private String videoUrl; // Thêm thuộc tính videoUrl
 
-    @SerializedName("slug")
-    private String slug;
-
-    @SerializedName("thumb_url")
-    private String thumb;
-
-    @SerializedName("description")
-    private String description;
-
-    @SerializedName("status")
-    private String status;
-
-    @SerializedName("episode_current")
-    private String episodeCurrent;
-
-    @SerializedName("episode_total")
-    private Integer episodeTotal;
-
-    @SerializedName("categories")
-    private List<String> categories;  // Thêm thuộc tính categories
-
-    public Movie(String title, String slug, String thumb, String description, String status,
-                 String episodeCurrent, Integer episodeTotal, List<String> categories) {
+    // Constructor
+    public Movie(String title, String posterPath, String videoUrl) {
         this.title = title;
-        this.slug = slug;
-        this.thumb = thumb;
-        this.description = description;
-        this.status = status;
-        this.episodeCurrent = episodeCurrent;
-        this.episodeTotal = episodeTotal;
-        this.categories = categories;
+        this.posterPath = posterPath;
+        this.videoUrl = videoUrl;
     }
 
-    // Getter cho categories
-    public List<String> getCategories() {
-        return categories;
+    // Getter và Setter cho title
+    public String getTitle() {
+        return title;
     }
 
-    // Các getter còn lại giữ nguyên
-    public String getTitle() { return title; }
-    public String getSlug() { return slug; }
-    public String getThumb() { return thumb; }
-    public String getDescription() { return description; }
-    public String getStatus() { return status; }
-    public String getEpisodeCurrent() { return episodeCurrent; }
-    public Integer getEpisodeTotal() { return episodeTotal; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    // Getter và Setter cho posterPath
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    // Getter và Setter cho videoUrl
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
 }

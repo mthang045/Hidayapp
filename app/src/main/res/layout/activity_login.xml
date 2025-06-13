@@ -3,14 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/custom_background"
     tools:ignore="ExtraText">  <!-- Nền gradient xám -->
 
-    <!-- Logo ứng dụng với bóng đổ nhẹ -->
-
     <!-- Form đăng nhập -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,25 +43,46 @@
             android:padding="16dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#BBBBBB"
-            android:textSize="16sp" /> <!-- Thêm inputType cho Username -->
-
-        <!-- Password input field -->
-        <EditText
-            android:id="@+id/edtPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edittext_bg"
-            android:hint="Mật khẩu"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BBBBBB"
             android:textSize="16sp" />
 
-        <!-- Sign In Button -->
+        <!-- Password input field with eye icon -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/edittext_bg"
+                android:hint="Mật khẩu"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#BBBBBB"
+                android:textSize="16sp" />
 
-        <!-- Text for 'Don't have an account?' -->
+            <!-- Icon to show/hide password -->
+            <ImageView
+                android:id="@+id/imgShowPassword"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_eyes_off"  /> <!-- Replace with your eye icon -->
+            android:tint="#FFFFFF"
+            android:contentDescription="Show/Hide Password" />
+        </RelativeLayout>
+        <CheckBox
+            android:id="@+id/cbRememberMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ghi nhớ đăng nhập"
+            android:layout_gravity="start"
+            android:textColor="#FFFFFF"
+            />
+        <!-- Sign In Button -->
         <Button
             android:id="@+id/btnSignIn"
             android:layout_width="match_parent"
@@ -93,7 +110,18 @@
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
 
-
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="Quên mật khẩu?"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </RelativeLayout>

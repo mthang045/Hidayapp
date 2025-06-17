@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Input cho review -->
+    <EditText
+        android:id="@+id/editReview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="Write your review here"
+        android:gravity="top"
+        android:inputType="textMultiLine" />
+
+    <!-- Nút gửi review -->
+    <Button
+        android:id="@+id/btnSubmitReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Review"
+        android:layout_marginTop="16dp" />
+
+    <!-- RecyclerView để hiển thị danh sách các bình luận -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reviewRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

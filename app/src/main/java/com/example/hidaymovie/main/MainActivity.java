@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView nowPlayingMoviesRecyclerView, popularMoviesRecyclerView, upcomingMoviesRecyclerView, topRatedMoviesRecyclerView;
     private MovieAdapter nowPlayingAdapter, popularAdapter, upcomingAdapter, topRatedAdapter;
-    private static final String API_KEY = "e9e9d8da18ae29fc430845952232787c"; // Thay bằng API Key của bạn
+    private static final String API_KEY = "d457a3503903f9582d34200aeddebdf5"; // Thay bằng API Key của bạn
     private static final String LANGUAGE = "en-US"; // Ngôn ngữ
 
     @Override

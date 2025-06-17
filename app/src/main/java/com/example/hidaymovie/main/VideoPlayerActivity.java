@@ -1,50 +1,49 @@
 package com.example.hidaymovie.main;
-
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.exoplayer2.DefaultLoadControl;
+
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.hidaymovie.R;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 
-    private PlayerView playerView;
-    private ExoPlayer exoPlayer;
+    private ExoPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
 
-        playerView = findViewById(R.id.playerView);
+        // Khởi tạo player
+        player = new ExoPlayer.Builder(this).build();
 
-        // Tạo ExoPlayer
-        exoPlayer = new ExoPlayer.Builder(this).build();
+        // Lấy video URL từ Intent
+        String videoUrl = getIntent().getStringExtra("video_url");
 
-        // Tạo MediaItem từ URL của video
-        String videoUrl = "https://path/to/your/video.mp4"; // Thay thế bằng URL của video
-        MediaItem mediaItem = MediaItem.fromUri(videoUrl);
+        // Kiểm tra nếu videoUrl hợp lệ
+        if (videoUrl != null && !videoUrl.isEmpty()) {
+            // Tạo MediaItem
+            MediaItem mediaItem = new MediaItem.Builder()
+                    .setUri(videoUrl)
+                    .build();
 
-        // Thiết lập player với MediaItem
-        exoPlayer.setMediaItem(mediaItem);
-        exoPlayer.prepare();
-
-        // Gán ExoPlayer vào PlayerView
-        playerView.setPlayer(exoPlayer);
-
-        // Bắt đầu phát video
-        exoPlayer.play();
+            // Gán MediaItem cho player
+            player.setMediaItem(mediaItem);
+            player.prepare();
+            player.play();
+        } else {
+            // Xử lý khi không có video URL
+            Toast.makeText(this, "Video URL không hợp lệ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Giải phóng tài nguyên khi không sử dụng ExoPlayer nữa
-        if (exoPlayer != null) {
-            exoPlayer.release();
-        }
+    protected void onStop() {
+        super.onStop();
+        // Giải phóng tài nguyên player khi không sử dụng nữa
+        player.release();
     }
 }

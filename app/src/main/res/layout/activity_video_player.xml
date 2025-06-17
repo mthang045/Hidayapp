@@ -1,17 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideoPlayerActivity">
+    android:background="@android:color/black">
 
-    <!-- ExoPlayer View -->
+    <!-- Video Player (PlayerView của ExoPlayer) -->
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:use_controller="true"
-        app:resize_mode="fit"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Thanh điều khiển với tên phim và thời gian phát -->
+    <LinearLayout
+        android:id="@+id/videoControlsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        android:background="#80000000"> <!-- Màu nền mờ đen cho thanh điều khiển -->
+
+        <!-- Tên phim -->
+        <TextView
+            android:id="@+id/videoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movie Title"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Thanh điều khiển phát video -->
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100" />
+
+        <!-- Các nút điều khiển Play/Pause, Stop -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/playButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_play_arrow"
+                android:contentDescription="Play"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="20dp"/>
+
+            <ImageButton
+                android:id="@+id/pauseButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_pause"
+                android:contentDescription="Pause"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="20dp"/>
+
+            <ImageButton
+                android:id="@+id/stopButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_stop"
+                android:contentDescription="Stop"
+                android:background="?attr/selectableItemBackground" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

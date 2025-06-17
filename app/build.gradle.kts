@@ -61,7 +61,10 @@ dependencies {
 
 dependencies {
     implementation ("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation ("androidx.appcompat:appcompat:1.3.1")  // Hoặc phiên bản mới nhất mà bạn đang sử dụng
+    implementation ("androidx.appcompat:appcompat:1.3.1")
+    implementation ("com.google.android.exoplayer:exoplayer:2.14.2")
+// Hoặc phiên bản mới nhất mà bạn đang sử dụng
 }
+
 
 apply(plugin = "com.google.gms.google-services")

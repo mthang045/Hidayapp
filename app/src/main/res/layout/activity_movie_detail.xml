@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- Poster của phim -->
+    <ImageView
+        android:id="@+id/moviePoster"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop" />
+
+    <!-- Tiêu đề phim -->
+    <TextView
+        android:id="@+id/movieTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Movie Title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_below="@id/moviePoster"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Mô tả phim -->
+    <TextView
+        android:id="@+id/movieDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Movie Description"
+        android:textSize="16sp"
+        android:layout_below="@id/movieTitle"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Ngày phát hành -->
+    <TextView
+        android:id="@+id/movieReleaseDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Release Date"
+        android:textSize="16sp"
+        android:layout_below="@id/movieDescription"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Đánh giá phim -->
+    <TextView
+        android:id="@+id/movieRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rating: 0.0"
+        android:textSize="16sp"
+        android:layout_below="@id/movieReleaseDate"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Nút Xem Review -->
+
+    <!-- Nút Xem Phim (chúng ta sẽ làm sau) -->
+    <Button
+        android:id="@+id/viewReviewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/movieRating"
+        android:layout_marginTop="16dp"
+        android:text="View Reviews" />
+
+    <Button
+        android:id="@+id/watchMovieButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewReviewButton"
+        android:layout_marginTop="10dp"
+        android:text="Watch Movie" />
+
+</RelativeLayout>

@@ -34,6 +34,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:21.0.1")
     implementation("com.google.firebase:firebase-database:20.0.5")
     implementation("com.google.firebase:firebase-firestore:24.0.0")
+    implementation("com.google.firebase:firebase-storage:20.0.1") // Firebase Storage
 
     // AndroidX dependencies
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -56,15 +57,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation ("com.google.android.exoplayer:exoplayer:2.15.0")
-
 }
-
-dependencies {
-    implementation ("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation ("androidx.appcompat:appcompat:1.3.1")
-    implementation ("com.google.android.exoplayer:exoplayer:2.14.2")
-// Hoặc phiên bản mới nhất mà bạn đang sử dụng
-}
-
 
 apply(plugin = "com.google.gms.google-services")

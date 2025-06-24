@@ -5,18 +5,26 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hidaymovie.adapter.MovieAdapter;
+import com.example.hidaymovie.fragment.FavoritesFragment;
+import com.example.hidaymovie.fragment.HomeFragment;
+import com.example.hidaymovie.fragment.ProfileFragment;
+import com.example.hidaymovie.fragment.SearchFragment;
 import com.example.hidaymovie.network.MovieApiService;
 import com.example.hidaymovie.network.MovieResponse;
 import com.example.hidaymovie.network.RetrofitClient;
 import com.hidaymovie.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView nowPlayingMoviesRecyclerView, popularMoviesRecyclerView, upcomingMoviesRecyclerView, topRatedMoviesRecyclerView;
@@ -58,6 +66,42 @@ public class MainActivity extends AppCompatActivity {
         getPopularMovies(1);      // Phim phổ biến
         getUpcomingMovies(1);     // Phim sắp ra mắt
         getTopRatedMovies(1);     // Phim nổi bật
+
+        // Khởi tạo BottomNavigationView
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        // Xử lý sự kiện khi người dùng chọn mục trong BottomNavigationView
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            // Điều hướng giữa các Fragment sử dụng if-else thay vì switch-case
+            if (item.getItemId() == R.id.menu_home) {
+                selectedFragment = new HomeFragment();
+            } else if (item.getItemId() == R.id.menu_search) {
+                selectedFragment = new SearchFragment();
+            } else if (item.getItemId() == R.id.menu_favorites) {
+                selectedFragment = new FavoritesFragment();
+            } else if (item.getItemId() == R.id.menu_profile) {
+                selectedFragment = new ProfileFragment();
+            }
+
+
+            // Thay đổi Fragment
+            loadFragment(selectedFragment);
+            return true;
+        });
+
+        // Hiển thị HomeFragment mặc định khi bắt đầu
+        if (savedInstanceState == null) {
+            bottomNavigationView.setSelectedItemId(R.id.menu_home); // Mặc định là Home
+        }
+    }
+
+    // Hàm để thay đổi Fragment
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment); // Thay thế nội dung của Fragment
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // API lấy phim đang chiếu

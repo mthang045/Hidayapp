@@ -42,7 +42,10 @@
             android:name="com.example.hidaymovie.main.MainActivity"
             android:exported="false" />
         <activity android:name="com.example.hidaymovie.main.MovieDetailActivity"></activity>
+ <activity android:name="com.example.hidaymovie.main.ReviewActivity"></activity>
 
+    <activity android:name="com.example.hidaymovie.ui.auth.ProfileActivity"></activity>
+        
     </application>
 
 

@@ -1,58 +1,46 @@
 package com.example.hidaymovie.model;
+
+import com.google.gson.annotations.SerializedName;
+
 public class Movie {
-    public String title;
-    public String backdrop_path;
-    public String overview;  // Trường mô tả phim
-    public String releaseDate;
-    public float voteAverage;
-    public String videoUrl;
+    @SerializedName("id")
+    private int id;
 
-    // Getter và Setter cho title, posterPath, overview, releaseDate, voteAverage, videoUrl
-    public String getTitle() {
-        return title;
-    }
+    // Đổi các trường thành private để nhất quán
+    @SerializedName("title")
+    private String title;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    @SerializedName("poster_path")
+    private String poster_path;
 
-    public String getPosterPath() {
-        return backdrop_path;
-    }
+    @SerializedName("backdrop_path")
+    private String backdrop_path;
 
-    public void setPosterPath(String posterPath) {
-        this.backdrop_path = posterPath;
-    }
+    @SerializedName("overview")
+    private String overview;
 
-    public String getOverview() {
-        return overview;  // Phương thức để lấy mô tả phim
-    }
+    @SerializedName("release_date")
+    private String releaseDate;
 
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
+    @SerializedName("vote_average")
+    private float voteAverage;
 
-    public String getReleaseDate() {
-        return releaseDate;
-    }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
+    // === GETTERS ===
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getPosterPath() { return poster_path; }
+    public String getBackdropPath() { return backdrop_path; }
+    public String getOverview() { return overview; }
+    public String getReleaseDate() { return releaseDate; }
+    public float getVoteAverage() { return voteAverage; }
 
-    public float getVoteAverage() {
-        return voteAverage;
-    }
-
-    public void setVoteAverage(float voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
+    // === SETTERS (PHẦN CẦN THIẾT ĐỂ SỬA LỖI) ===
+    public void setId(int id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setPosterPath(String poster_path) { this.poster_path = poster_path; }
+    public void setBackdropPath(String backdrop_path) { this.backdrop_path = backdrop_path; }
+    public void setOverview(String overview) { this.overview = overview; }
+    public void setReleaseDate(String releaseDate) { this.releaseDate = releaseDate; }
+    public void setVoteAverage(float voteAverage) { this.voteAverage = voteAverage; }
 }

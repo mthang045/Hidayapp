@@ -2,7 +2,6 @@ package com.example.hidaymovie.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,74 +23,75 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private List<Movie> movieList;
     private Context context;
 
-    // Constructor để nhận context
     public MovieAdapter(Context context) {
         this.context = context;
     }
 
-    // Set dữ liệu cho Adapter
     public void setMovies(List<Movie> movies) {
         this.movieList = movies;
-        notifyDataSetChanged();  // Cập nhật dữ liệu
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Tạo item cho mỗi view trong RecyclerView
         View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
         return new MovieViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Movie movie = movieList.get(position);
+        if (movieList == null || movieList.isEmpty()) return;
 
-        // Set tên phim cho từng item
+        Movie movie = movieList.get(position);
         holder.titleTextView.setText(movie.getTitle());
 
-        // Kiểm tra posterPath trước khi tải ảnh
-        String posterPath = movie.backdrop_path;
-        Log.d("posterPath", posterPath != null ? posterPath : "không tồn tại");
-        String posterUrl;
-
-        // Nếu posterPath hợp lệ, nối vào URL đầy đủ, nếu không thì sử dụng hình ảnh mặc định
-        if (posterPath == null || posterPath.isEmpty()) {
-            posterUrl = "https://image.tmdb.org/t/p/w500/default_image.jpg";  // Hình ảnh mặc định khi không có poster
-        } else {
-            posterUrl = "https://image.tmdb.org/t/p/w500/" + posterPath;  // Nối URL cơ sở với poster_path
+        // Ưu tiên dùng poster_path (ảnh đứng), nếu không có thì dùng backdrop_path
+        String imagePath = movie.getPosterPath();
+        if (imagePath == null || imagePath.isEmpty()) {
+            imagePath = movie.getBackdropPath();
         }
 
-        // Dùng Glide để tải ảnh poster từ URL
-        Glide.with(context)
-                .load(posterUrl)
-                .placeholder(R.drawable.ic_placeholder)  // Hình ảnh thay thế khi chưa tải được poster
-                .error(R.drawable.error_image)  // Hình ảnh khi có lỗi
-                .into(holder.posterImageView);
+        final String posterUrl;
+        if (imagePath == null || imagePath.isEmpty()) {
+            // Nếu cả hai đều không có thì dùng ảnh mặc định
+            Glide.with(context)
+                    .load(R.drawable.ic_placeholder) // Bạn cần có ảnh này trong drawable
+                    .into(holder.posterImageView);
+            posterUrl = "";
+        } else {
+            posterUrl = "https://image.tmdb.org/t/p/w500" + imagePath;
+            Glide.with(context)
+                    .load(posterUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.error_image) // Bạn cần có ảnh này
+                    .into(holder.posterImageView);
+        }
 
-        // Khi người dùng nhấp vào item
         holder.itemView.setOnClickListener(v -> {
-            // Truyền thông tin chi tiết của movie vào Intent
             Intent intent = new Intent(context, MovieDetailActivity.class);
-            intent.putExtra("poster_url", posterUrl);  // Truyền poster URL đầy đủ
+
+            // Truyền các thông tin cần thiết sang màn hình chi tiết
+            intent.putExtra("movie_id", String.valueOf(movie.getId()));
+            intent.putExtra("poster_url", posterUrl);
             intent.putExtra("title", movie.getTitle());
             intent.putExtra("description", movie.getOverview());
             intent.putExtra("release_date", movie.getReleaseDate());
-            intent.putExtra("rating", movie.getVoteAverage());
-            intent.putExtra("video_url", movie.getVideoUrl()); // Truyền video URL (nếu có)
+            intent.putExtra("rating", String.valueOf(movie.getVoteAverage()));
+
+            // Dòng gây lỗi đã được xóa ở đây.
+            // Chúng ta không cần truyền video_url nữa vì đã có movie_id.
+
             context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        // Trả về số lượng item trong RecyclerView
         return movieList == null ? 0 : movieList.size();
     }
 
-    // ViewHolder cho mỗi item
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
-
         TextView titleTextView;
         ImageView posterImageView;
 

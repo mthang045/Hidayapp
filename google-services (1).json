@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "860484158915",
+    "project_id": "hidaymovieproject",
+    "storage_bucket": "hidaymovieproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860484158915:android:35ebff89b23bd61ebee976",
+        "android_client_info": {
+          "package_name": "com.hidaymovie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4AHDkpnS36zhZEai4BoHGEZz9gISPFxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

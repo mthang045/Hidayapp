@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Quyền truy cập Internet, bắt buộc cho WebView và API -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,7 +16,7 @@
         android:theme="@style/Theme.HidayMovie"
         tools:targetApi="31">
 
-        <!-- Màn hình đăng nhập là màn hình chính -->
+        <!-- Màn hình đăng nhập sẽ khởi chạy đầu tiên -->
         <activity
             android:name="com.example.hidaymovie.ui.auth.LoginActivity"
             android:exported="true">
@@ -25,28 +26,21 @@
             </intent-filter>
         </activity>
 
-        <!-- Các màn hình khác -->
+        <!-- Khai báo các màn hình khác của ứng dụng với đường dẫn đầy đủ -->
+        <activity android:name="com.example.hidaymovie.ui.auth.RegisterActivity" />
+        <activity android:name="com.example.hidaymovie.ui.auth.ForgotPasswordActivity" />
+        <activity android:name="com.example.hidaymovie.main.MainActivity" />
+        <activity android:name="com.example.hidaymovie.main.MovieDetailActivity" />
+        <activity android:name="com.example.hidaymovie.main.ReviewActivity" />
 
+        <!-- Thêm màn hình phát phim mới -->
         <activity
-            android:name="com.example.hidaymovie.ui.auth.RegisterActivity"
-            android:exported="false" />
+            android:name="com.example.hidaymovie.main.MoviePlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
+        <!-- ProfileActivity thừa đã được xóa -->
 
-
-        <activity android:name="com.example.hidaymovie.ui.auth.ForgotPasswordActivity"
-
-            android:label="Quên Mật Khẩu"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-
-        <activity
-            android:name="com.example.hidaymovie.main.MainActivity"
-            android:exported="false" />
-        <activity android:name="com.example.hidaymovie.main.MovieDetailActivity"></activity>
- <activity android:name="com.example.hidaymovie.main.ReviewActivity"></activity>
-
-    <activity android:name="com.example.hidaymovie.ui.auth.ProfileActivity"></activity>
-        
     </application>
-
 
 </manifest>

@@ -13,16 +13,36 @@
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop" />
 
-    <!-- Tiêu đề phim -->
-    <TextView
-        android:id="@+id/movieTitle"
-        android:layout_width="wrap_content"
+    <!-- Dòng chứa Tiêu đề và nút Yêu thích -->
+    <LinearLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Movie Title"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:layout_below="@id/moviePoster"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Tiêu đề phim -->
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Movie Title"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- === NÚT YÊU THÍCH MỚI === -->
+        <ImageButton
+            android:id="@+id/favoriteButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_favorite_border"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Add to favorites" />
+
+    </LinearLayout>
 
     <!-- Mô tả phim -->
     <TextView
@@ -31,7 +51,7 @@
         android:layout_height="wrap_content"
         android:text="Movie Description"
         android:textSize="16sp"
-        android:layout_below="@id/movieTitle"
+        android:layout_below="@id/titleLayout"
         android:layout_marginTop="8dp"/>
 
     <!-- Ngày phát hành -->
@@ -55,8 +75,6 @@
         android:layout_marginTop="8dp"/>
 
     <!-- Nút Xem Review -->
-
-    <!-- Nút Xem Phim (chúng ta sẽ làm sau) -->
     <Button
         android:id="@+id/viewReviewButton"
         android:layout_width="wrap_content"
@@ -65,6 +83,7 @@
         android:layout_marginTop="16dp"
         android:text="View Reviews" />
 
+    <!-- Nút Xem Phim -->
     <Button
         android:id="@+id/watchMovieButton"
         android:layout_width="wrap_content"

@@ -81,7 +81,11 @@ public class RegisterActivity extends AppCompatActivity {
                         finish(); // Close the RegisterActivity
                     } else {
                         // Registration failed
-                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(RegisterActivity.this, "Đăng ký thất bại. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+
+                        String error = task.getException() != null ? task.getException().getMessage() : "Lỗi không xác định";
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + error, Toast.LENGTH_LONG).show();
+
                     }
                 });
     }

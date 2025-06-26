@@ -38,6 +38,7 @@
             android:id="@+id/favoriteButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_favorite_border"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Add to favorites" />

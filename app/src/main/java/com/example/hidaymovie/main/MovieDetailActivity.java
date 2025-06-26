@@ -74,14 +74,26 @@ public class MovieDetailActivity extends AppCompatActivity {
             checkIfFavorite();
         }
 
-        // Xử lý sự kiện nhấn nút yêu thích
         favoriteButton.setOnClickListener(v -> {
             if (currentUser != null && movieId != null) {
+                // Cập nhật trạng thái và UI ngay
+                isFavorite = !isFavorite;
+                updateFavoriteButtonUI();
+
+                // Hiển thị thông báo NGAY cho người dùng
+                if (isFavorite) {
+                    Toast.makeText(this, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                }
+
+                // Sau đó mới gọi Firestore
                 toggleFavoriteStatus();
             } else {
                 Toast.makeText(this, "Vui lòng đăng nhập để sử dụng tính năng này", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         // Xử lý sự kiện nhấn nút xem phim
         watchMovieButton.setOnClickListener(v -> {
@@ -115,14 +127,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .collection("favorites").document(movieId);
 
         if (isFavorite) {
-            // Nếu đang là yêu thích -> Xóa
-            movieRef.delete().addOnSuccessListener(aVoid -> {
-                isFavorite = false;
-                updateFavoriteButtonUI();
-                Toast.makeText(MovieDetailActivity.this, "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
-            });
-        } else {
-            // Nếu chưa phải yêu thích -> Thêm
+            // Nếu đang là yêu thích -> Thêm (ngược với trước)
             Intent intent = getIntent();
             String title = intent.getStringExtra("title");
             String description = intent.getStringExtra("description");
@@ -144,20 +149,30 @@ public class MovieDetailActivity extends AppCompatActivity {
                 return;
             }
 
-            movieRef.set(movieData).addOnSuccessListener(aVoid -> {
-                isFavorite = true;
-                updateFavoriteButtonUI();
-                Toast.makeText(MovieDetailActivity.this, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show();
-            });
+            movieRef.set(movieData).addOnSuccessListener(aVoid ->
+                    Toast.makeText(MovieDetailActivity.this, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show()
+            );
+        } else {
+            // Nếu đang không yêu thích -> Xóa
+            movieRef.delete().addOnSuccessListener(aVoid ->
+                    Toast.makeText(MovieDetailActivity.this, "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show()
+            );
         }
     }
+
+
 
     // Hàm cập nhật giao diện của nút yêu thích
     private void updateFavoriteButtonUI() {
         if (isFavorite) {
             favoriteButton.setImageResource(R.drawable.ic_favorite_filled);
-        } else {
+            //Toast.makeText(this, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show();
+        } else{
             favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            //Toast.makeText(this, "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
         }
+
+        // Buộc ImageButton vẽ lại để phản ánh sự thay đổi
+        //favoriteButton.invalidate();
     }
 }

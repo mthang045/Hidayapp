@@ -1,4 +1,5 @@
 package com.example.hidaymovie.fragment;
+import com.example.hidaymovie.adapter.FavoriteMovieAdapter;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +27,7 @@ import java.util.List;
 public class FavoritesFragment extends Fragment {
 
     private RecyclerView favoritesRecyclerView;
-    private MovieAdapter favoritesAdapter;
+    private FavoriteMovieAdapter favoritesAdapter;
     private List<Movie> favoriteMovieList;
 
     private FirebaseFirestore db;
@@ -47,7 +48,7 @@ public class FavoritesFragment extends Fragment {
         favoritesRecyclerView = view.findViewById(R.id.favoritesRecyclerView);
         favoritesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         favoriteMovieList = new ArrayList<>();
-        favoritesAdapter = new MovieAdapter(getContext());
+        favoritesAdapter = new FavoriteMovieAdapter(getContext());
         favoritesAdapter.setMovies(favoriteMovieList);
         favoritesRecyclerView.setAdapter(favoritesAdapter);
 

@@ -47,7 +47,7 @@
                 android:layout_height="40dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_favorite_filled"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@null"
                 android:contentDescription="Add to favorites" />
         </LinearLayout>
 

@@ -3,19 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".fragment.SearchFragment">
 
     <!-- Thanh tìm kiếm -->
-    <EditText
-        android:id="@+id/searchEditText"
-        android:layout_width="match_parent"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/searchBarContainer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Nhập tên phim cần tìm..."
-        android:imeOptions="actionSearch"
-        android:inputType="text"
-        android:maxLines="1" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="373dp"
+            android:layout_height="60dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:hint="Nhập tên phim cần tìm..."
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColorHint="#8A8A8A"
+            android:textSize="16sp"
+            tools:ignore="Autofill" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- RecyclerView để hiển thị kết quả tìm kiếm -->
     <androidx.recyclerview.widget.RecyclerView

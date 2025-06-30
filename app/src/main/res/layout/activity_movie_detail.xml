@@ -1,96 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="?attr/colorSurface"
+    tools:context=".MovieDetailActivity">
 
-    <!-- Poster của phim -->
-    <ImageView
-        android:id="@+id/moviePoster"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:scaleType="centerCrop" />
+        android:layout_height="wrap_content">
 
-    <!-- Dòng chứa Tiêu đề và nút Yêu thích -->
-    <LinearLayout
-        android:id="@+id/titleLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/moviePoster"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/moviePoster"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        <!-- Tiêu đề phim -->
-        <TextView
-            android:id="@+id/movieTitle"
+        <LinearLayout
+            android:id="@+id/mainInfoBlock"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Movie Title"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moviePoster">
 
-        <!-- === NÚT YÊU THÍCH MỚI === -->
-        <ImageButton
-            android:id="@+id/favoriteButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_favorite_border"
-            android:background="@null"
-            android:contentDescription="Add to favorites" />
+            <LinearLayout
+                android:id="@+id/titleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/movieTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                    tools:text="Tên Phim Rất Dài Để Kiểm Tra Xuống Dòng" />
 
-    <!-- Mô tả phim -->
-    <TextView
-        android:id="@+id/movieDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Movie Description"
-        android:textSize="16sp"
-        android:layout_below="@id/titleLayout"
-        android:layout_marginTop="8dp"/>
+                <ImageButton
+                    android:id="@+id/favoriteButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Add to favorites"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_favorite_border" />
+            </LinearLayout>
 
-    <!-- Ngày phát hành -->
-    <TextView
-        android:id="@+id/movieReleaseDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Release Date"
-        android:textSize="16sp"
-        android:layout_below="@id/movieDescription"
-        android:layout_marginTop="16dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-    <!-- Đánh giá phim -->
-    <TextView
-        android:id="@+id/movieRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rating: 0.0"
-        android:textSize="16sp"
-        android:layout_below="@id/movieReleaseDate"
-        android:layout_marginTop="8dp"/>
+                <TextView
+                    android:id="@+id/movieRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_star"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    tools:text="Rating: 8.5" />
 
-    <!-- Nút Xem Review -->
-    <Button
-        android:id="@+id/viewReviewButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/movieRating"
-        android:layout_marginTop="16dp"
-        android:text="View Reviews" />
+                <TextView
+                    android:id="@+id/movieReleaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
 
-    <!-- Nút Xem Phim -->
-    <Button
-        android:id="@+id/watchMovieButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/viewReviewButton"
-        android:layout_marginTop="10dp"
-        android:text="Watch Movie" />
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    tools:text="Release Date" />
+            </LinearLayout>
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/movieDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:lineSpacingMultiplier="1.2"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="Đây là phần mô tả phim. Nội dung có thể rất dài, do đó việc đặt nó trong một NestedScrollView là cực kỳ quan trọng để đảm bảo người dùng có thể đọc hết toàn bộ nội dung mà không bị giao diện che khuất hay cắt mất." />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mainInfoBlock">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewReviewButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:textSize="15sp"
+                android:text="View Reviews" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/watchMovieButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:textSize="15sp"
+                android:text="Watch Movie"
+             />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

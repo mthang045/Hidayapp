@@ -13,144 +13,161 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.hidaymovie.R;
-import com.example.hidaymovie.main.MainActivity;
+import com.example.hidaymovie.main.HistoryActivity;
+import com.example.hidaymovie.ui.auth.LoginActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.example.hidaymovie.ui.auth.LoginActivity;
+import com.hidaymovie.R;
+
 public class ProfileFragment extends Fragment {
 
     private ImageView userProfileImage;
     private TextView userName, userEmail;
-    private Button editProfileImageButton, editNameButton, editEmailButton, editPasswordButton, logoutButton;
+    private Button editNameButton, historyButton, editPasswordButton, logoutButton;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        // Ánh xạ các view từ layout
         userProfileImage = view.findViewById(R.id.userProfileImage);
         userName = view.findViewById(R.id.userName);
         userEmail = view.findViewById(R.id.userEmail);
-        editProfileImageButton = view.findViewById(R.id.editProfileImageButton);
         editNameButton = view.findViewById(R.id.editNameButton);
-        editEmailButton = view.findViewById(R.id.editEmailButton);
+        historyButton = view.findViewById(R.id.historyButton);
         editPasswordButton = view.findViewById(R.id.editPasswordButton);
         logoutButton = view.findViewById(R.id.logoutButton);
 
+        // Hiển thị thông tin người dùng
         displayUserInfo();
 
-        editProfileImageButton.setOnClickListener(v -> changeProfileImage());
+        // Cài đặt sự kiện cho các nút
         editNameButton.setOnClickListener(v -> changeUserName());
-
         editPasswordButton.setOnClickListener(v -> changeUserPassword());
         logoutButton.setOnClickListener(v -> logout());
 
-        return view;
+        // Sự kiện cho nút Lịch sử xem phim
+        historyButton.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), HistoryActivity.class));
+        });
     }
 
+    // Hàm hiển thị thông tin người dùng
     private void displayUserInfo() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            userName.setText(user.getDisplayName());
-            userEmail.setText(user.getEmail());
-            Glide.with(getActivity())
-                    .load(user.getPhotoUrl())
-                    .placeholder(R.drawable.ic_profile)
-                    .into(userProfileImage);
+        if (currentUser != null) {
+            userName.setText(currentUser.getDisplayName());
+            userEmail.setText(currentUser.getEmail());
+            if (currentUser.getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load(currentUser.getPhotoUrl())
+                        .placeholder(R.drawable.ic_profile)
+                        .into(userProfileImage);
+            }
         }
     }
 
-    private void changeProfileImage() {
-        // Placeholder for future implementation
-    }
-
+    // Hàm thay đổi tên người dùng
     private void changeUserName() {
-        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_name, null);
+        if (getContext() == null) return;
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_name, null);
         EditText editName = dialogView.findViewById(R.id.editName);
+        if (currentUser != null) {
+            editName.setText(currentUser.getDisplayName());
+        }
 
-        new MaterialAlertDialogBuilder(getActivity())
-                .setTitle("Change Name")
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Đổi tên hiển thị")
                 .setView(dialogView)
-                .setPositiveButton("Save", (dialogInterface, i) -> {
+                .setPositiveButton("Lưu", (dialog, which) -> {
                     String newName = editName.getText().toString().trim();
-                    if (!newName.isEmpty()) {
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        if (user != null) {
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(newName)
-                                    .build();
-
-                            user.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(task -> {
-                                        if (task.isSuccessful()) {
-                                            userName.setText(newName);
-                                            Toast.makeText(getActivity(), "Name updated successfully", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getActivity(), "Failed to update name", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                    if (!TextUtils.isEmpty(newName) && currentUser != null) {
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(newName)
+                                .build();
+                        currentUser.updateProfile(profileUpdates).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                userName.setText(newName);
+                                Toast.makeText(getContext(), "Cập nhật tên thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Hủy", null)
                 .show();
     }
 
-
+    // Hàm thay đổi mật khẩu
     private void changeUserPassword() {
-        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_change_password, null);
+        if (getContext() == null) return;
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_password, null);
         EditText currentPassword = dialogView.findViewById(R.id.editCurrentPassword);
         EditText newPassword = dialogView.findViewById(R.id.editNewPassword);
         EditText confirmPassword = dialogView.findViewById(R.id.editConfirmNewPassword);
 
-        new MaterialAlertDialogBuilder(getActivity())
-                .setTitle("Change Password")
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Đổi mật khẩu")
                 .setView(dialogView)
-                .setPositiveButton("Save", (dialogInterface, i) -> {
+                .setPositiveButton("Lưu", (dialog, which) -> {
                     String current = currentPassword.getText().toString();
                     String newPass = newPassword.getText().toString();
                     String confirm = confirmPassword.getText().toString();
 
-                    if (TextUtils.isEmpty(current) || newPass.length() < 6 || !newPass.equals(confirm)) {
-                        Toast.makeText(getActivity(), "Please check your inputs", Toast.LENGTH_SHORT).show();
+                    if (TextUtils.isEmpty(current)) {
+                        Toast.makeText(getContext(), "Vui lòng nhập mật khẩu hiện tại", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (newPass.length() < 6) {
+                        Toast.makeText(getContext(), "Mật khẩu mới phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (!newPass.equals(confirm)) {
+                        Toast.makeText(getContext(), "Mật khẩu mới không khớp", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null && user.getEmail() != null) {
-                        user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(), current))
+                    if (currentUser != null && currentUser.getEmail() != null) {
+                        currentUser.reauthenticate(EmailAuthProvider.getCredential(currentUser.getEmail(), current))
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
-                                        user.updatePassword(newPass)
-                                                .addOnCompleteListener(updateTask -> {
-                                                    if (updateTask.isSuccessful()) {
-                                                        Toast.makeText(getActivity(), "Password updated successfully", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(getActivity(), "Failed to update password", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
+                                        currentUser.updatePassword(newPass).addOnCompleteListener(updateTask -> {
+                                            if (updateTask.isSuccessful()) {
+                                                Toast.makeText(getContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     } else {
-                                        Toast.makeText(getActivity(), "Re-authentication failed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Xác thực thất bại, mật khẩu hiện tại không đúng", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Hủy", null)
                 .show();
     }
 
+    // Hàm đăng xuất
     private void logout() {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getActivity(), LoginActivity.class));
+        if (getActivity() == null) return;
+        mAuth.signOut();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         getActivity().finish();
     }
 }

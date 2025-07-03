@@ -1,114 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@android:color/white"
-    tools:context=".ProfileActivity">
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="24dp"
+    tools:context=".fragment.ProfileFragment">
 
-    <!-- Ảnh đại diện người dùng -->
     <ImageView
         android:id="@+id/userProfileImage"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="32dp"
         android:src="@drawable/ic_profile"
-        android:contentDescription="Profile Image"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:contentDescription="User Profile Image" />
 
-    <!-- Nút chỉnh sửa ảnh đại diện -->
     <Button
         android:id="@+id/editProfileImageButton"
+        style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change Profile Image"
-        app:layout_constraintTop_toBottomOf="@id/userProfileImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/darker_gray"/>
+        android:text="CHANGE PROFILE IMAGE"
+        android:textColor="#8A8A8A" />
 
-    <!-- Tên người dùng -->
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textSize="22sp"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/editProfileImageButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        tools:text="Bui Minh Thang" />
 
-    <!-- Email người dùng -->
     <TextView
         android:id="@+id/userEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/userName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="4dp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        tools:text="buiminnthag@gmail.com" />
 
-    <!-- Chỉnh sửa tên người dùng -->
-    <Button
-        android:id="@+id/editNameButton"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Name"
-        app:layout_constraintTop_toBottomOf="@id/userEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"/>
+        android:orientation="vertical"
+        android:layout_marginTop="32dp">
 
-    <!-- Chỉnh sửa email người dùng -->
-    <Button
-        android:id="@+id/editEmailButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Edit Email"
-        app:layout_constraintTop_toBottomOf="@id/editNameButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"/>
+        <Button
+            android:id="@+id/editNameButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EDIT NAME" />
 
-    <!-- Chỉnh sửa mật khẩu -->
-    <Button
-        android:id="@+id/editPasswordButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Change Password"
-        app:layout_constraintTop_toBottomOf="@id/editEmailButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"/>
+        <Button
+            android:id="@+id/historyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="LỊCH SỬ XEM PHIM" />
 
-    <!-- Đăng xuất tài khoản -->
+        <Button
+            android:id="@+id/editPasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="CHANGE PASSWORD" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/logoutButton"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log Out"
-        app:layout_constraintTop_toBottomOf="@id/editPasswordButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="#FF5722"
-        android:textColor="@android:color/white"/>
+        android:text="LOG OUT" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

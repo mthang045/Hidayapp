@@ -39,7 +39,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <!-- ProfileActivity thừa đã được xóa -->
+        <!-- === PHẦN SỬA LỖI === -->
+        <!-- Thêm khai báo cho màn hình Lịch sử xem phim -->
+        <activity
+            android:name="com.example.hidaymovie.main.HistoryActivity"
+            android:label="Lịch sử xem phim" />
 
     </application>
 

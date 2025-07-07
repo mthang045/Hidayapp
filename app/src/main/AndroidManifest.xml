@@ -33,17 +33,20 @@
         <activity android:name="com.example.hidaymovie.main.MovieDetailActivity" />
         <activity android:name="com.example.hidaymovie.main.ReviewActivity" />
 
-        <!-- Thêm màn hình phát phim mới -->
+        <!-- Màn hình phát phim -->
         <activity
             android:name="com.example.hidaymovie.main.MoviePlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <!-- === PHẦN SỬA LỖI === -->
-        <!-- Thêm khai báo cho màn hình Lịch sử xem phim -->
+        <!-- Màn hình Lịch sử xem phim -->
         <activity
             android:name="com.example.hidaymovie.main.HistoryActivity"
             android:label="Lịch sử xem phim" />
+
+        <!-- === PHẦN SỬA LỖI === -->
+        <!-- Thêm khai báo cho màn hình xem ảnh toàn màn hình -->
+        <activity android:name="com.example.hidaymovie.main.FullScreenImageActivity" />
 
     </application>
 

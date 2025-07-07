@@ -1,6 +1,8 @@
 package com.example.hidaymovie.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,11 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.hidaymovie.main.FullScreenImageActivity;
 import com.example.hidaymovie.main.HistoryActivity;
 import com.example.hidaymovie.ui.auth.LoginActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -24,15 +29,33 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.hidaymovie.R;
 
 public class ProfileFragment extends Fragment {
 
     private ImageView userProfileImage;
     private TextView userName, userEmail;
-    private Button editNameButton, historyButton, editPasswordButton, logoutButton;
+    private Button editNameButton, editEmailButton, historyButton, editPasswordButton, logoutButton;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Đăng ký trình khởi chạy để nhận kết quả từ thư viện ảnh
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        uploadImageToFirebase(imageUri);
+                    }
+                }
+        );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,64 +63,119 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Tải lại thông tin người dùng khi quay lại Fragment này
+        currentUser = mAuth.getCurrentUser();
+        displayUserInfo();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        // Ánh xạ các view từ layout
+        // Ánh xạ views
         userProfileImage = view.findViewById(R.id.userProfileImage);
         userName = view.findViewById(R.id.userName);
         userEmail = view.findViewById(R.id.userEmail);
         editNameButton = view.findViewById(R.id.editNameButton);
+        editEmailButton = view.findViewById(R.id.editEmailButton);
         historyButton = view.findViewById(R.id.historyButton);
         editPasswordButton = view.findViewById(R.id.editPasswordButton);
         logoutButton = view.findViewById(R.id.logoutButton);
 
-        // Hiển thị thông tin người dùng
         displayUserInfo();
 
         // Cài đặt sự kiện cho các nút
+        userProfileImage.setOnClickListener(v -> showProfileImageOptions());
         editNameButton.setOnClickListener(v -> changeUserName());
+        editEmailButton.setOnClickListener(v -> changeUserEmail());
+        historyButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), HistoryActivity.class)));
         editPasswordButton.setOnClickListener(v -> changeUserPassword());
         logoutButton.setOnClickListener(v -> logout());
-
-        // Sự kiện cho nút Lịch sử xem phim
-        historyButton.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), HistoryActivity.class));
-        });
     }
 
-    // Hàm hiển thị thông tin người dùng
+    // === CÁC HÀM XỬ LÝ SỰ KIỆN ĐÃ ĐƯỢC HOÀN THIỆN ===
+
+    private void showProfileImageOptions() {
+        if (getContext() == null) return;
+        final CharSequence[] options = {"Xem ảnh đại diện", "Chọn ảnh đại diện", "Hủy"};
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Ảnh đại diện")
+                .setItems(options, (dialog, item) -> {
+                    if (options[item].equals("Xem ảnh đại diện")) {
+                        Intent intent = new Intent(getActivity(), FullScreenImageActivity.class);
+                        if (currentUser != null && currentUser.getPhotoUrl() != null) {
+                            intent.putExtra("image_url", currentUser.getPhotoUrl().toString());
+                        }
+                        startActivity(intent);
+                    } else if (options[item].equals("Chọn ảnh đại diện")) {
+                        openImageChooser();
+                    } else if (options[item].equals("Hủy")) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
     private void displayUserInfo() {
         if (currentUser != null) {
-            userName.setText(currentUser.getDisplayName());
+            String nameToDisplay = currentUser.getDisplayName();
+            if (nameToDisplay == null || nameToDisplay.isEmpty()) {
+                nameToDisplay = "User";
+            }
+            userName.setText(nameToDisplay);
             userEmail.setText(currentUser.getEmail());
             if (currentUser.getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(currentUser.getPhotoUrl())
-                        .placeholder(R.drawable.ic_profile)
-                        .into(userProfileImage);
+                Glide.with(this).load(currentUser.getPhotoUrl()).circleCrop().placeholder(R.drawable.ic_profile).into(userProfileImage);
+            } else {
+                Glide.with(this).load(R.drawable.ic_profile).circleCrop().into(userProfileImage);
             }
         }
     }
 
-    // Hàm thay đổi tên người dùng
+    private void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        imagePickerLauncher.launch(intent);
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        if (currentUser == null) return;
+        Toast.makeText(getContext(), "Đang tải ảnh lên...", Toast.LENGTH_SHORT).show();
+        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("profile_images/" + currentUser.getUid() + ".jpg");
+        profileImageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> profileImageRef.getDownloadUrl().addOnSuccessListener(this::updateUserProfile))
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi khi tải ảnh lên", Toast.LENGTH_SHORT).show());
+    }
+
+    private void updateUserProfile(Uri profileImageUrl) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setPhotoUri(profileImageUrl).build();
+        currentUser.updateProfile(profileUpdates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(getContext(), "Cập nhật ảnh đại diện thành công", Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Glide.with(this).load(profileImageUrl).circleCrop().into(userProfileImage);
+                }
+            }
+        });
+    }
+
     private void changeUserName() {
-        if (getContext() == null) return;
+        if (getContext() == null || currentUser == null) return;
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_name, null);
         EditText editName = dialogView.findViewById(R.id.editName);
-        if (currentUser != null) {
-            editName.setText(currentUser.getDisplayName());
-        }
+        editName.setText(currentUser.getDisplayName());
 
         new MaterialAlertDialogBuilder(getContext())
                 .setTitle("Đổi tên hiển thị")
                 .setView(dialogView)
                 .setPositiveButton("Lưu", (dialog, which) -> {
                     String newName = editName.getText().toString().trim();
-                    if (!TextUtils.isEmpty(newName) && currentUser != null) {
+                    if (!TextUtils.isEmpty(newName)) {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(newName)
                                 .build();
@@ -113,7 +191,48 @@ public class ProfileFragment extends Fragment {
                 .show();
     }
 
-    // Hàm thay đổi mật khẩu
+    private void changeUserEmail() {
+        if (getContext() == null || currentUser == null) return;
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_email, null);
+        EditText editNewEmail = dialogView.findViewById(R.id.editNewEmail);
+        EditText editCurrentPassword = dialogView.findViewById(R.id.editCurrentPassword);
+
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Đổi địa chỉ Email")
+                .setView(dialogView)
+                .setPositiveButton("Lưu", (dialog, which) -> {
+                    String newEmail = editNewEmail.getText().toString().trim();
+                    String password = editCurrentPassword.getText().toString();
+
+                    if (TextUtils.isEmpty(newEmail) || !android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                        Toast.makeText(getContext(), "Vui lòng nhập email hợp lệ", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (TextUtils.isEmpty(password)) {
+                        Toast.makeText(getContext(), "Vui lòng nhập mật khẩu để xác thực", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    currentUser.reauthenticate(EmailAuthProvider.getCredential(currentUser.getEmail(), password))
+                            .addOnCompleteListener(reauthTask -> {
+                                if (reauthTask.isSuccessful()) {
+                                    currentUser.updateEmail(newEmail).addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            userEmail.setText(newEmail);
+                                            Toast.makeText(getContext(), "Cập nhật email thành công", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getContext(), "Lỗi: Không thể cập nhật email", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getContext(), "Xác thực thất bại, mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
     private void changeUserPassword() {
         if (getContext() == null) return;
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_password, null);
@@ -161,7 +280,6 @@ public class ProfileFragment extends Fragment {
                 .show();
     }
 
-    // Hàm đăng xuất
     private void logout() {
         if (getActivity() == null) return;
         mAuth.signOut();

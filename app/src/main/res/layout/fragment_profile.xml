@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:padding="24dp"
     tools:context=".fragment.ProfileFragment">
 
-    <ImageView
-        android:id="@+id/userProfileImage"
+    <!-- Khung tròn cho Avatar -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/ic_profile"
-        android:contentDescription="User Profile Image" />
+        app:cardCornerRadius="60dp"
+        app:cardElevation="4dp">
 
-    <Button
-        android:id="@+id/editProfileImageButton"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="CHANGE PROFILE IMAGE"
-        android:textColor="#8A8A8A" />
+        <ImageView
+            android:id="@+id/userProfileImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="User Profile Image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
 
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Tên người dùng -->
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
@@ -34,6 +37,7 @@
         android:textStyle="bold"
         tools:text="Bui Minh Thang" />
 
+    <!-- Email người dùng -->
     <TextView
         android:id="@+id/userEmail"
         android:layout_width="wrap_content"
@@ -42,17 +46,25 @@
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         tools:text="buiminnthag@gmail.com" />
 
+    <!-- Cụm nút chức năng -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="32dp">
+        android:layout_marginTop="32dp"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/editNameButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="EDIT NAME" />
+            android:text="ĐỔI TÊN HIỂN THỊ" />
+
+        <Button
+            android:id="@+id/editEmailButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="ĐỔI EMAIL" />
 
         <Button
             android:id="@+id/historyButton"
@@ -66,16 +78,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="CHANGE PASSWORD" />
+            android:text="ĐỔI MẬT KHẨU" />
 
     </LinearLayout>
 
+    <!-- Nút đăng xuất -->
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="#FF5722"
-        android:text="LOG OUT" />
+        android:text="ĐĂNG XUẤT" />
 
 </LinearLayout>

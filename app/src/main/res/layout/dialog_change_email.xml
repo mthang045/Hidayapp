@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nhập địa chỉ email mới của bạn."
+        android:textAppearance="?attr/textAppearanceBody1" />
+
+    <EditText
+        android:id="@+id/editNewEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Email mới"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Để bảo mật, vui lòng nhập lại mật khẩu của bạn."
+        android:textAppearance="?attr/textAppearanceBody1" />
+
+    <EditText
+        android:id="@+id/editCurrentPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Mật khẩu hiện tại"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
+
+</LinearLayout>

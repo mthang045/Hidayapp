@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Quyền truy cập Internet, bắt buộc cho WebView và API -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- SỬA LẠI TÊN LỚP APPLICATION -->
     <application
-        android:name="com.example.hidaymovie.HidayMovieApplication"
+        android:name="com.hidaymovie.HidayMovieApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,9 +16,9 @@
         android:theme="@style/Theme.HidayMovie"
         tools:targetApi="31">
 
-        <!-- Màn hình đăng nhập sẽ khởi chạy đầu tiên -->
+        <!-- SỬA LẠI TOÀN BỘ TÊN ACTIVITY -->
         <activity
-            android:name="com.example.hidaymovie.ui.auth.LoginActivity"
+            android:name="com.hidaymovie.ui.auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,27 +26,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Khai báo các màn hình khác của ứng dụng với đường dẫn đầy đủ -->
-        <activity android:name="com.example.hidaymovie.ui.auth.RegisterActivity" />
-        <activity android:name="com.example.hidaymovie.ui.auth.ForgotPasswordActivity" />
-        <activity android:name="com.example.hidaymovie.main.MainActivity" />
-        <activity android:name="com.example.hidaymovie.main.MovieDetailActivity" />
-        <activity android:name="com.example.hidaymovie.main.ReviewActivity" />
-
-        <!-- Màn hình phát phim -->
+        <activity android:name="com.hidaymovie.ui.auth.RegisterActivity" />
+        <activity android:name="com.hidaymovie.ui.auth.ForgotPasswordActivity" />
+        <activity android:name="com.hidaymovie.main.MainActivity" />
+        <activity android:name="com.hidaymovie.main.MovieDetailActivity" />
+        <activity android:name="com.hidaymovie.main.ReviewActivity" />
         <activity
-            android:name="com.example.hidaymovie.main.MoviePlayerActivity"
+            android:name="com.hidaymovie.main.MoviePlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <!-- Màn hình Lịch sử xem phim -->
         <activity
-            android:name="com.example.hidaymovie.main.HistoryActivity"
+            android:name="com.hidaymovie.main.HistoryActivity"
             android:label="Lịch sử xem phim" />
-
-        <!-- === PHẦN SỬA LỖI === -->
-        <!-- Thêm khai báo cho màn hình xem ảnh toàn màn hình -->
-        <activity android:name="com.example.hidaymovie.main.FullScreenImageActivity" />
+        <activity android:name="com.hidaymovie.main.FullScreenImageActivity" />
 
     </application>
 

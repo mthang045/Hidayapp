@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:layout_marginBottom="8dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:orientation="horizontal"
+    android:padding="12dp">
 
-    <TextView
-        android:id="@+id/reviewAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Author"
-        android:textStyle="bold"
-        android:textSize="14sp" />
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_profile"
+        android:contentDescription="Ảnh đại diện người dùng" />
 
-    <TextView
-        android:id="@+id/reviewContent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Review content"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            tools:text="Tên Người Dùng" />
+
+        <RatingBar
+            android:id="@+id/rating_bar_indicator"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/review_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            tools:text="Nội dung bình luận ở đây. Phim rất hay và đáng xem." />
+    </LinearLayout>
 </LinearLayout>

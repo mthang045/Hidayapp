@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/actor_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_profile"
+        android:contentDescription="Ảnh diễn viên" />
+
+    <TextView
+        android:id="@+id/actor_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Keanu Reeves" />
+
+    <TextView
+        android:id="@+id/character_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:textSize="12sp"
+        tools:text="Neo" />
+
+</LinearLayout>

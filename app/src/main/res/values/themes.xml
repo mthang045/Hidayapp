@@ -19,4 +19,13 @@
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
+    <!-- Style cho các TextView meta đã được sửa lỗi -->
+    <style name="DetailMetaText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <!-- SỬA LỖI: Dùng một màu cụ thể đã có trong colors.xml -->
+        <item name="android:textColor">@color/colorTextSecondary</item>
+    </style>
+
 </resources>

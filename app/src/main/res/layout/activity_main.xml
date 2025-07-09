@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hidaymovie.main.MainActivity">
+    tools:context=".main.MainActivity">
 
     <!-- Container để chứa các Fragment (Home, Search, Profile...) -->
     <FrameLayout

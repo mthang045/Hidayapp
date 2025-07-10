@@ -3,7 +3,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- SỬA LẠI TÊN LỚP APPLICATION -->
     <application
         android:name="com.hidaymovie.HidayMovieApplication"
         android:allowBackup="true"
@@ -16,7 +15,6 @@
         android:theme="@style/Theme.HidayMovie"
         tools:targetApi="31">
 
-        <!-- SỬA LẠI TOÀN BỘ TÊN ACTIVITY -->
         <activity
             android:name="com.hidaymovie.ui.auth.LoginActivity"
             android:exported="true">
@@ -29,12 +27,21 @@
         <activity android:name="com.hidaymovie.ui.auth.RegisterActivity" />
         <activity android:name="com.hidaymovie.ui.auth.ForgotPasswordActivity" />
         <activity android:name="com.hidaymovie.main.MainActivity" />
-        <activity android:name="com.hidaymovie.main.MovieDetailActivity" />
+
+        <!-- === THAY ĐỔI NẰM Ở ĐÂY === -->
+        <!-- Thêm android:configChanges để xử lý xoay màn hình -->
+        <activity
+            android:name="com.hidaymovie.main.MovieDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
         <activity android:name="com.hidaymovie.main.ReviewActivity" />
+
+        <!-- Màn hình phát phim cũ, không còn dùng trong luồng chính nhưng vẫn giữ lại -->
         <activity
             android:name="com.hidaymovie.main.MoviePlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity
             android:name="com.hidaymovie.main.HistoryActivity"
             android:label="Lịch sử xem phim" />

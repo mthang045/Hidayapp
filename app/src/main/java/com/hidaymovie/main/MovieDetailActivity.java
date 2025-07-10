@@ -1,13 +1,22 @@
 package com.hidaymovie.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -18,10 +27,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
 import com.hidaymovie.BuildConfig;
 import com.hidaymovie.R;
 import com.hidaymovie.adapter.CastAdapter;
@@ -61,12 +72,19 @@ public class MovieDetailActivity extends AppCompatActivity {
     private MovieApiService apiService;
 
     // Views
-    private ImageView movieBackdrop;
+    private CoordinatorLayout mainContent;
+    private FrameLayout fullscreenContainer;
+    private ImageView movieBackdrop, playButtonOverlay;
+    private WebView moviePlayerWebView;
     private TextView movieTitle, movieReleaseYear, movieRuntime, movieRating, movieOverview;
     private ChipGroup genreChipGroup;
-    private Button watchMovieButton, writeReviewButton;
+    private Button writeReviewButton;
     private ImageButton favoriteButton;
-    private TextView textViewShowMore; // Thêm view cho nút "Xem thêm"
+    private TextView textViewShowMore;
+
+    // Fullscreen video handling
+    private View customView;
+    private WebChromeClient.CustomViewCallback customViewCallback;
 
     // RecyclerViews and Adapters
     private RecyclerView castRecyclerView, similarMoviesRecyclerView, reviewsRecyclerView;
@@ -102,27 +120,30 @@ public class MovieDetailActivity extends AppCompatActivity {
         loadAllData();
 
         favoriteButton.setOnClickListener(v -> toggleFavoriteStatus());
-        watchMovieButton.setOnClickListener(v -> {
+
+        playButtonOverlay.setOnClickListener(v -> {
             saveToHistory();
-            Intent playerIntent = new Intent(MovieDetailActivity.this, MoviePlayerActivity.class);
-            playerIntent.putExtra("movie_id", movieId);
-            startActivity(playerIntent);
+            playMovieInWebView();
         });
+
         writeReviewButton.setOnClickListener(v -> showSubmitReviewDialog());
     }
 
     private void initViews() {
+        mainContent = findViewById(R.id.main_content);
+        fullscreenContainer = findViewById(R.id.fullscreen_container);
         movieBackdrop = findViewById(R.id.movie_backdrop);
+        playButtonOverlay = findViewById(R.id.play_button_overlay);
+        moviePlayerWebView = findViewById(R.id.movie_player_webview);
         movieTitle = findViewById(R.id.movie_title);
         movieReleaseYear = findViewById(R.id.movie_release_year);
         movieRuntime = findViewById(R.id.movie_runtime);
         movieRating = findViewById(R.id.movie_rating);
         movieOverview = findViewById(R.id.movie_overview);
         genreChipGroup = findViewById(R.id.genre_chip_group);
-        watchMovieButton = findViewById(R.id.watch_movie_button);
         writeReviewButton = findViewById(R.id.write_review_button);
         favoriteButton = findViewById(R.id.favorite_button);
-        textViewShowMore = findViewById(R.id.text_view_show_more); // Ánh xạ view mới
+        textViewShowMore = findViewById(R.id.text_view_show_more);
 
         castRecyclerView = findViewById(R.id.cast_recycler_view);
         castRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -135,6 +156,95 @@ public class MovieDetailActivity extends AppCompatActivity {
         reviewList = new ArrayList<>();
         reviewAdapter = new ReviewAdapter(this, reviewList);
         reviewsRecyclerView.setAdapter(reviewAdapter);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void playMovieInWebView() {
+        movieBackdrop.setVisibility(View.GONE);
+        playButtonOverlay.setVisibility(View.GONE);
+        moviePlayerWebView.setVisibility(View.VISIBLE);
+
+        String videoUrl = "https://vidsrc.to/embed/movie/" + movieId;
+
+        WebSettings webSettings = moviePlayerWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAllowContentAccess(true);
+        webSettings.setLoadsImagesAutomatically(true);
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+        moviePlayerWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onShowCustomView(View view, CustomViewCallback callback) {
+                super.onShowCustomView(view, callback);
+                if (customView != null) {
+                    onHideCustomView();
+                    return;
+                }
+                customView = view;
+                customViewCallback = callback;
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                fullscreenContainer.addView(customView);
+                fullscreenContainer.setVisibility(View.VISIBLE);
+                mainContent.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onHideCustomView() {
+                super.onHideCustomView();
+                if (customView == null) {
+                    return;
+                }
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                fullscreenContainer.removeView(customView);
+                fullscreenContainer.setVisibility(View.GONE);
+                mainContent.setVisibility(View.VISIBLE);
+                customView = null;
+                customViewCallback.onCustomViewHidden();
+            }
+        });
+
+        moviePlayerWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                String clickedDomain = Uri.parse(url).getHost();
+                if (clickedDomain != null && !clickedDomain.contains("vidsrc.to")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        moviePlayerWebView.loadUrl(videoUrl);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (customView != null) {
+            moviePlayerWebView.getWebChromeClient().onHideCustomView();
+        } else if (moviePlayerWebView.getVisibility() == View.VISIBLE) {
+            moviePlayerWebView.loadUrl("about:blank");
+            moviePlayerWebView.setVisibility(View.GONE);
+            movieBackdrop.setVisibility(View.VISIBLE);
+            playButtonOverlay.setVisibility(View.VISIBLE);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        moviePlayerWebView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        moviePlayerWebView.onResume();
     }
 
     private void setupToolbar() {
@@ -231,7 +341,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
     private void loadMovieDetails(String apiKey) {
-        // === THAY ĐỔI 1: Yêu cầu API trả về ngôn ngữ Tiếng Việt ===
         apiService.getMovieDetails(movieId, apiKey, "vi-VN", "videos").enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
@@ -271,24 +380,30 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void setupShowMoreButton() {
         movieOverview.post(() -> {
-            if (movieOverview.getLineCount() > 4) {
-                textViewShowMore.setVisibility(View.VISIBLE);
-                textViewShowMore.setOnClickListener(new View.OnClickListener() {
-                    private boolean isExpanded = false;
-                    @Override
-                    public void onClick(View v) {
-                        if (isExpanded) {
-                            movieOverview.setMaxLines(4);
-                            textViewShowMore.setText("Xem thêm");
-                        } else {
-                            movieOverview.setMaxLines(Integer.MAX_VALUE);
-                            textViewShowMore.setText("Thu gọn");
-                        }
-                        isExpanded = !isExpanded;
+            Layout layout = movieOverview.getLayout();
+            if (layout != null) {
+                int lines = layout.getLineCount();
+                if (lines > 0) {
+                    if (layout.getEllipsisCount(lines - 1) > 0) {
+                        textViewShowMore.setVisibility(View.VISIBLE);
+                        textViewShowMore.setOnClickListener(new View.OnClickListener() {
+                            private boolean isExpanded = false;
+                            @Override
+                            public void onClick(View v) {
+                                if (isExpanded) {
+                                    movieOverview.setMaxLines(4);
+                                    textViewShowMore.setText("Xem thêm");
+                                } else {
+                                    movieOverview.setMaxLines(Integer.MAX_VALUE);
+                                    textViewShowMore.setText("Thu gọn");
+                                }
+                                isExpanded = !isExpanded;
+                            }
+                        });
+                    } else {
+                        textViewShowMore.setVisibility(View.GONE);
                     }
-                });
-            } else {
-                textViewShowMore.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -310,7 +425,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void loadSimilarMovies(String apiKey) {
-        // === THAY ĐỔI 2: Yêu cầu API trả về ngôn ngữ Tiếng Việt ===
         apiService.getSimilarMovies(movieId, apiKey, "vi-VN", 1).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {

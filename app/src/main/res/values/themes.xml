@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme - Light mode -->
-    <style name="Theme.HidayMovie" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.HidayMovie" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/white</item>
 
-        <item name="colorSecondary">@color/colorAccent</item>
-        <item name="colorSecondaryVariant">@color/colorAccent</item>
-        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorSecondaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnSecondary">@color/white</item>
 
         <item name="android:colorBackground">@color/colorBackground</item>
-        <item name="colorSurface">@color/colorBackground</item>
-        <item name="colorOnBackground">@color/colorTextPrimary</item>
-        <item name="colorOnSurface">@color/colorTextPrimary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnBackground">@color/textColorPrimary</item>
+        <item name="colorOnSurface">@color/textColorPrimary</item>
 
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
-    <!-- Style cho các TextView meta đã được sửa lỗi -->
     <style name="DetailMetaText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
-        <!-- SỬA LỖI: Dùng một màu cụ thể đã có trong colors.xml -->
-        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
     </style>
 
 </resources>

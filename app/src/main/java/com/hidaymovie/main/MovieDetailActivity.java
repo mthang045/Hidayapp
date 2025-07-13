@@ -32,20 +32,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.AppBarLayout;
-import com.hidaymovie.BuildConfig;
-import com.hidaymovie.R;
-import com.hidaymovie.adapter.CastAdapter;
-import com.hidaymovie.adapter.MovieAdapter;
-import com.hidaymovie.adapter.ReviewAdapter;
-import com.hidaymovie.model.Cast;
-import com.hidaymovie.model.CreditResponse;
-import com.hidaymovie.model.Genre;
-import com.hidaymovie.model.Movie;
-import com.hidaymovie.model.Review;
-import com.hidaymovie.network.MovieResponse;
-import com.hidaymovie.network.MovieApiService;
-import com.hidaymovie.network.RetrofitClient;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,6 +41,19 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.hidaymovie.BuildConfig;
+import com.hidaymovie.R;
+import com.hidaymovie.adapter.CastAdapter;
+import com.hidaymovie.adapter.MovieAdapter;
+import com.hidaymovie.adapter.ReviewAdapter;
+import com.hidaymovie.model.Cast;
+import com.hidaymovie.model.CreditResponse;
+import com.hidaymovie.model.Genre;
+import com.hidaymovie.model.Movie;
+import com.hidaymovie.model.MovieResponse;
+import com.hidaymovie.model.Review;
+import com.hidaymovie.network.MovieApiService;
+import com.hidaymovie.network.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -445,7 +444,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Map<String, Object> historyData = new HashMap<>();
         historyData.put("id", currentMovie.getId());
         historyData.put("title", currentMovie.getTitle());
-        historyData.put("poster_path", currentMovie.getPosterPath());
+        historyData.put("posterPath", currentMovie.getPosterPath());
         historyData.put("watchedAt", FieldValue.serverTimestamp());
         historyRef.set(historyData).addOnSuccessListener(aVoid -> Log.d(TAG, "Đã lưu vào lịch sử")).addOnFailureListener(e -> Log.w(TAG, "Lỗi lưu lịch sử", e));
     }
@@ -460,23 +459,23 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void toggleFavoriteStatus() {
-        if (currentUser == null || currentMovie == null) return;
+        if (currentUser == null || currentMovie == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để sử dụng chức năng này", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         DocumentReference movieRef = db.collection("users").document(currentUser.getUid()).collection("favorites").document(movieId);
+
         if (isFavorite) {
+            // Xóa khỏi yêu thích
             movieRef.delete().addOnSuccessListener(aVoid -> {
                 isFavorite = false;
                 updateFavoriteButtonUI();
                 Toast.makeText(this, "Đã xóa khỏi Yêu thích", Toast.LENGTH_SHORT).show();
             });
         } else {
-            Map<String, Object> movieData = new HashMap<>();
-            movieData.put("id", currentMovie.getId());
-            movieData.put("title", currentMovie.getTitle());
-            movieData.put("poster_path", currentMovie.getPosterPath());
-            movieData.put("overview", currentMovie.getOverview());
-            movieData.put("release_date", currentMovie.getReleaseDate());
-            movieData.put("vote_average", currentMovie.getVoteAverage());
-            movieRef.set(movieData).addOnSuccessListener(aVoid -> {
+            // Thêm vào yêu thích - LƯU TRỰC TIẾP ĐỐI TƯỢNG MOVIE
+            movieRef.set(currentMovie).addOnSuccessListener(aVoid -> {
                 isFavorite = true;
                 updateFavoriteButtonUI();
                 Toast.makeText(this, "Đã thêm vào Yêu thích", Toast.LENGTH_SHORT).show();

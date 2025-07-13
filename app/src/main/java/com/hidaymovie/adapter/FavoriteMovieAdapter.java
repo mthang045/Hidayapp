@@ -5,21 +5,21 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.hidaymovie.main.MovieDetailActivity;
-import com.hidaymovie.model.Movie;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.hidaymovie.R;
+import com.hidaymovie.main.MovieDetailActivity;
+import com.hidaymovie.model.Movie;
 
 import java.util.List;
 
@@ -51,6 +51,7 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
         Movie movie = movieList.get(position);
         holder.titleTextView.setText(movie.getTitle());
 
+        // SỬ DỤNG TÊN HÀM ĐÚNG
         String imagePath = movie.getPosterPath() != null && !movie.getPosterPath().isEmpty()
                 ? movie.getPosterPath()
                 : movie.getBackdropPath();
@@ -58,7 +59,7 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
         final String posterUrl;
         if (imagePath == null || imagePath.isEmpty()) {
             Glide.with(context)
-                    .load(R.drawable.ic_placeholder)
+                    .load(R.drawable.ic_placeholder) // Bạn cần có ảnh ic_placeholder
                     .into(holder.posterImageView);
             posterUrl = "";
         } else {
@@ -66,18 +67,13 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
             Glide.with(context)
                     .load(posterUrl)
                     .placeholder(R.drawable.ic_placeholder)
-                    .error(R.drawable.error_image)
+                    .error(R.drawable.error_image) // Bạn cần có ảnh error_image
                     .into(holder.posterImageView);
         }
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, MovieDetailActivity.class);
             intent.putExtra("movie_id", String.valueOf(movie.getId()));
-            intent.putExtra("poster_url", posterUrl);
-            intent.putExtra("title", movie.getTitle());
-            intent.putExtra("description", movie.getOverview());
-            intent.putExtra("release_date", movie.getReleaseDate());
-            intent.putExtra("rating", String.valueOf(movie.getVoteAverage()));
             context.startActivity(intent);
         });
 

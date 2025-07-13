@@ -28,15 +28,14 @@
         <activity android:name="com.hidaymovie.ui.auth.ForgotPasswordActivity" />
         <activity android:name="com.hidaymovie.main.MainActivity" />
 
-        <!-- === THAY ĐỔI NẰM Ở ĐÂY === -->
-        <!-- Thêm android:configChanges để xử lý xoay màn hình -->
         <activity
             android:name="com.hidaymovie.main.MovieDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
+        <activity android:name="com.hidaymovie.main.MovieListActivity" />
+
         <activity android:name="com.hidaymovie.main.ReviewActivity" />
 
-        <!-- Màn hình phát phim cũ, không còn dùng trong luồng chính nhưng vẫn giữ lại -->
         <activity
             android:name="com.hidaymovie.main.MoviePlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -45,6 +44,7 @@
         <activity
             android:name="com.hidaymovie.main.HistoryActivity"
             android:label="Lịch sử xem phim" />
+
         <activity android:name="com.hidaymovie.main.FullScreenImageActivity" />
 
     </application>

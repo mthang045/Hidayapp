@@ -18,12 +18,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.hidaymovie.main.FullScreenImageActivity;
-import com.hidaymovie.main.HistoryActivity;
-import com.hidaymovie.ui.auth.LoginActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,12 +31,15 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.hidaymovie.R;
+import com.hidaymovie.main.FullScreenImageActivity;
+import com.hidaymovie.main.HistoryActivity;
+import com.hidaymovie.ui.auth.LoginActivity;
 
 public class ProfileFragment extends Fragment {
 
     private ImageView userProfileImage;
     private TextView userName, userEmail;
-    private Button editNameButton, editEmailButton, historyButton, editPasswordButton, logoutButton;
+    private Button editNameButton, historyButton, editPasswordButton, btnChangeTheme, logoutButton;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -81,23 +83,63 @@ public class ProfileFragment extends Fragment {
         userName = view.findViewById(R.id.userName);
         userEmail = view.findViewById(R.id.userEmail);
         editNameButton = view.findViewById(R.id.editNameButton);
-        editEmailButton = view.findViewById(R.id.editEmailButton);
         historyButton = view.findViewById(R.id.historyButton);
         editPasswordButton = view.findViewById(R.id.editPasswordButton);
         logoutButton = view.findViewById(R.id.logoutButton);
+        btnChangeTheme = view.findViewById(R.id.btn_change_theme);
 
         displayUserInfo();
 
         // Cài đặt sự kiện cho các nút
+        setupClickListeners();
+    }
+
+    private void setupClickListeners() {
         userProfileImage.setOnClickListener(v -> showProfileImageOptions());
         editNameButton.setOnClickListener(v -> changeUserName());
-        editEmailButton.setOnClickListener(v -> changeUserEmail());
         historyButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), HistoryActivity.class)));
         editPasswordButton.setOnClickListener(v -> changeUserPassword());
         logoutButton.setOnClickListener(v -> logout());
+        btnChangeTheme.setOnClickListener(v -> showThemeDialog());
     }
 
-    // === CÁC HÀM XỬ LÝ SỰ KIỆN ĐÃ ĐƯỢC HOÀN THIỆN ===
+    private void showThemeDialog() {
+        if (getContext() == null) return;
+        final String[] themes = {"Sáng", "Tối", "Theo hệ thống"};
+
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Chọn giao diện")
+                .setItems(themes, (dialog, which) -> {
+                    switch (which) {
+                        case 0: // Chế độ Sáng
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            break;
+                        case 1: // Chế độ Tối
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            break;
+                        case 2: // Theo cài đặt hệ thống
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                            break;
+                    }
+                })
+                .show();
+    }
+
+    private void displayUserInfo() {
+        if (currentUser != null) {
+            String nameToDisplay = currentUser.getDisplayName();
+            if (nameToDisplay == null || nameToDisplay.isEmpty()) {
+                nameToDisplay = "Người dùng";
+            }
+            userName.setText(nameToDisplay);
+            userEmail.setText(currentUser.getEmail());
+            if (currentUser.getPhotoUrl() != null) {
+                Glide.with(this).load(currentUser.getPhotoUrl()).circleCrop().placeholder(R.drawable.ic_profile).into(userProfileImage);
+            } else {
+                Glide.with(this).load(R.drawable.ic_profile).circleCrop().into(userProfileImage);
+            }
+        }
+    }
 
     private void showProfileImageOptions() {
         if (getContext() == null) return;
@@ -118,22 +160,6 @@ public class ProfileFragment extends Fragment {
                     }
                 })
                 .show();
-    }
-
-    private void displayUserInfo() {
-        if (currentUser != null) {
-            String nameToDisplay = currentUser.getDisplayName();
-            if (nameToDisplay == null || nameToDisplay.isEmpty()) {
-                nameToDisplay = "User";
-            }
-            userName.setText(nameToDisplay);
-            userEmail.setText(currentUser.getEmail());
-            if (currentUser.getPhotoUrl() != null) {
-                Glide.with(this).load(currentUser.getPhotoUrl()).circleCrop().placeholder(R.drawable.ic_profile).into(userProfileImage);
-            } else {
-                Glide.with(this).load(R.drawable.ic_profile).circleCrop().into(userProfileImage);
-            }
-        }
     }
 
     private void openImageChooser() {
@@ -234,7 +260,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void changeUserPassword() {
-        if (getContext() == null) return;
+        if (getContext() == null || currentUser == null) return;
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_password, null);
         EditText currentPassword = dialogView.findViewById(R.id.editCurrentPassword);
         EditText newPassword = dialogView.findViewById(R.id.editNewPassword);
@@ -261,20 +287,18 @@ public class ProfileFragment extends Fragment {
                         return;
                     }
 
-                    if (currentUser != null && currentUser.getEmail() != null) {
-                        currentUser.reauthenticate(EmailAuthProvider.getCredential(currentUser.getEmail(), current))
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        currentUser.updatePassword(newPass).addOnCompleteListener(updateTask -> {
-                                            if (updateTask.isSuccessful()) {
-                                                Toast.makeText(getContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(getContext(), "Xác thực thất bại, mật khẩu hiện tại không đúng", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
+                    currentUser.reauthenticate(EmailAuthProvider.getCredential(currentUser.getEmail(), current))
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    currentUser.updatePassword(newPass).addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getContext(), "Xác thực thất bại, mật khẩu hiện tại không đúng", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 })
                 .setNegativeButton("Hủy", null)
                 .show();

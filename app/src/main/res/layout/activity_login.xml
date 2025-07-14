@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/custom_background"
-    tools:ignore="ExtraText">  <!-- Nền gradient xám -->
+    tools:ignore="ExtraText">
 
-    <!-- Form đăng nhập -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +19,14 @@
         android:padding="30dp"
         android:radius="60dp">
 
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logo_hiday"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="App Logo" />
+
         <TextView
             android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
@@ -31,7 +38,6 @@
             android:textSize="50sp"
             android:textStyle="bold" />
 
-        <!-- Username input field -->
         <EditText
             android:id="@+id/edtUsername"
             android:layout_width="match_parent"
@@ -45,7 +51,6 @@
             android:textColorHint="#BBBBBB"
             android:textSize="16sp" />
 
-        <!-- Password input field with eye icon -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,15 +68,13 @@
                 android:textColorHint="#BBBBBB"
                 android:textSize="16sp" />
 
-            <!-- Icon to show/hide password -->
             <ImageView
                 android:id="@+id/imgShowPassword"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_eyes_off"  /> <!-- Replace with your eye icon -->
-            android:tint="#FFFFFF"
+                android:src="@drawable/eyes_off"  /> android:tint="#FFFFFF"
             android:contentDescription="Show/Hide Password" />
         </RelativeLayout>
         <CheckBox
@@ -82,7 +85,6 @@
             android:layout_gravity="start"
             android:textColor="#FFFFFF"
             />
-        <!-- Sign In Button -->
         <Button
             android:id="@+id/btnSignIn"
             android:layout_width="match_parent"
